@@ -621,6 +621,9 @@ void manageConnection(void)
 		removeTimer(&receiveStatus, &receiveID);
 		removeTimer(&transmitStatus, &transmitID);
 		//zastopowanie odbioru i transmisji danych
+		//cos tam
+
+		//elo melo
 	}
 }
 
