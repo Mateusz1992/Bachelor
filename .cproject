@@ -144,7 +144,7 @@
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.877532986" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input"/>
 							</tool>
 							<tool id="com.ifx.xmc4000.appDebug.linker.1235263969" name="ARM-GCC C Linker" superClass="com.ifx.xmc4000.appDebug.linker">
-								<option id="com.ifx.xmc4000.appLinker.option.libs.1868468328" superClass="com.ifx.xmc4000.appLinker.option.libs" valueType="libs">
+								<option id="com.ifx.xmc4000.appLinker.option.libs.1868468328" name="Libraries (-l)" superClass="com.ifx.xmc4000.appLinker.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="m"/>
 								</option>
 								<inputType id="com.ifx.xmc4000.appLinker.inputType.260941841" name="ARM-GCC for XMC Linker Input Type" superClass="com.ifx.xmc4000.appLinker.inputType">
