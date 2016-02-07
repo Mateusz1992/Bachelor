@@ -18,6 +18,8 @@
 
 extern int accelMeasurementsNum;
 
+extern char measurementsLSMRead;
+
 extern int indexAccel;
 extern char lk[20];
 

@@ -38,6 +38,7 @@ int main(void)
 	calibrate(TRUE);
 
 	accel pomiary[100];
+	accel measurementsToSent[100];
 
 	//initBluetooth();
 	accelMeasurementsNum = 0;
@@ -47,6 +48,12 @@ int main(void)
 		if(	accelMeasurementsNum > 99)
 		{
 			accelMeasurementsNum = 0;
+
+			for(int i = 0; i < 100; i++)
+			{
+				measurementsToSent[i] = pomiary[i];
+				pomiary[i] = 0;
+			}
 		}
 
 		/*if(initStatus)

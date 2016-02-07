@@ -614,6 +614,8 @@ void manageConnection(void)
 		removeTimer(&receiveStatus, &receiveID);
 		removeTimer(&transmitStatus, &transmitID);
 		//zastopowanie odbioru i transmisji danych
+
+		makeTimer(1500, SYSTM001_PERIODIC, transmitToSensor, NULL, &transmitStatus, &transmitID);
 	}
 	else if(chosenSensor == 2)
 	{

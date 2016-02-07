@@ -24,6 +24,7 @@ uint8_t dataWrite = 0;
 
 uint16_t accelerationXYZ[6] = {0, 0, 0, 0, 0, 0};
 
+
 void timerHandlerI2CreadByte(void *T)
 {
 	//I2C001_DataType data1,data2,data3,data4,data5, data6, data7;

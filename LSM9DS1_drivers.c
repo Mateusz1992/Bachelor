@@ -46,8 +46,12 @@ typedef struct pomiary
 
 pomiary poms;
 
+char measurementsLSMRead;
+
 void init(interface_mode interface, uint8_t xgAddr, uint8_t mAddr)
 {
+	measurementsLSMRead = 0;
+
 	settings.device.commInterface = interface;
 	settings.device.agAddress = xgAddr;
 	settings.device.mAddress = mAddr;
@@ -811,11 +815,12 @@ void readAccel1v1(accel *a)
 	az = calcAccel(az);
 
 
-	if(accelMeasurementsNum > 99)
+	if((accelMeasurementsNum > 99) && (measurementsLSMRead == 0))
 	{
-		a[accelMeasurementsNum].ax = ax;
+		measurementsLSMRead = 1;
+		/*a[accelMeasurementsNum].ax = ax;
 		a[accelMeasurementsNum].ay = ay;
-		a[accelMeasurementsNum].az = az;
+		a[accelMeasurementsNum].az = az;*/
 
 		return;
 	}
