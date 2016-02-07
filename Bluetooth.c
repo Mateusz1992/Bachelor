@@ -62,6 +62,8 @@ uint32_t emergencyReadStatus;
 handle_t TimerId;
 uint32_t Status;
 
+int chosenSensor;
+
 char initStatus;
 
 void initVariables(void)
@@ -103,6 +105,8 @@ void initVariables(void)
 
 	handle_t TimerId = 0;
 	uint32_t Status = SYSTM001_ERROR;
+
+	chosenSensor = -1; //neither of sensors were chosen
 }
 
 void timerHandler(void *T)
@@ -280,6 +284,42 @@ void receive(void *T)
 void transmit(void *T)
 {
 	char kommando[20]/* = "DupaMateusz"*/;
+	/*lk[0] = 'O';
+	lk[1] = 'K';
+	lk[2] = 'C';
+	lk[3] = 'H';
+	lk[4] = 'O';
+	lk[5] = 'S';
+	lk[6] = 'E';
+	lk[7] = 'N';
+	lk[8] = '\0';*/
+
+	if(lk[0] != '\0')
+	{
+		int licznik = 0;
+		for(licznik = 0; licznik < strlen(lk); licznik++)
+		{
+			kommando[licznik] = lk[licznik];
+		}
+		kommando[licznik] = '\0';
+
+		int len = strlen(kommando);
+
+		if(readStatus == 0)
+		{
+			sendStatus = 1;
+			send(kommando, len);
+			sendStatus = 0;
+		}
+	}
+
+}
+
+
+void transmitToSensor(void *T)
+{
+	char kommando[20]/* = "DupaMateusz"*/;
+
 
 	if(lk[0] != '\0')
 	{
@@ -312,6 +352,15 @@ void read(void)
 
 		statusRxFifoFilling = USIC_GetRxFIFOFillingLevel(UART001_0_USIC_CH);
 		howManyRead =  UART001_ReadDataBytes(&UART001_Handle0, readData, statusRxFifoFilling);
+
+		if(strcmp(readData, "LSM9DS1") == 0)
+		{
+			chosenSensor = 1;
+		}
+		else if(strcmp(readData, "TEMP_SENSOR") == 0)
+		{
+			chosenSensor = 2;
+		}
 
 		UART001_ClearFlag(&UART001_Handle0,UART001_FIFO_STD_RECV_BUF_FLAG);
 
@@ -501,25 +550,25 @@ void manageConnection(void)
 	k = SYSTM001_GetTime();
 	k = SYSTM001_GetSysTickCount(100);
 	z++;
-	if(statusSent == 1)
-	{
+	if(statusSent == 1) //jak statusSent jest rowny jeden to inicjalizujemy modul po kolei zwiêkszaj¹c stageOfInitializationBt
+	{					//a¿ do stageOfInitializationBt == 6
 		removeTimer(&StatusReceive, &TimerIdReceive);
 
 		statusSent = 0;
 	}
 
-	if(stageOfInitializationBt == OUT_OF_INIT)
+	if(stageOfInitializationBt == OUT_OF_INIT) //tutaj stageOfInitializationBt == 7 czyli mamy doczynienia z ostatnim etapem inicjalizacji
 	{
-		removeTimer(&Status, &TimerId);
+		removeTimer(&Status, &TimerId); //usuniecie timera odpowiedzialnego za wysylanie w celu inicjalizacji
 
-		stageOfInitializationBt++;
+		stageOfInitializationBt++; //zwiekszenie licznika inicjalizacji w celu wyslania ostatniej komendy w ostatnim kroku
 	}
 
-	if(((stageOfInitializationBt - 1) == OUT_OF_INIT))
+	if(((stageOfInitializationBt - 1) == OUT_OF_INIT)) //wyslanie ostaniej ostaniej komendy
 	{
 		lastStageOfInitializationBt = OUT_OF_INIT;
 
-		makeTimer(500, SYSTM001_PERIODIC, timerHandlerConnectionSet, NULL, &statusSetConnection, &TimerIDSetConnection);
+		makeTimer(500, SYSTM001_PERIODIC, timerHandlerConnectionSet, NULL, &statusSetConnection, &TimerIDSetConnection); //wys³anie ostaniej komendy
 
 		if(TimerIDSetConnection != 0)
 		{
@@ -528,10 +577,12 @@ void manageConnection(void)
 	}
 	else if(lastStageOfInitializationBt == (OUT_OF_INIT + 1))
 	{
-		removeTimer(&statusSetConnection, &TimerIDSetConnection);
+		removeTimer(&statusSetConnection, &TimerIDSetConnection);//usuniecie timera o odpowiedzialnego za wyslanie ostaniej komendy
 
 		if(statusSetConnection == DAVEApp_SUCCESS)
 		{
+			removeTimer(&StatusReceive, &TimerIdReceive);
+
 			lastStageOfInitializationBt++;
 			turnOnSendingReceiving = 1;
 		}
@@ -550,10 +601,26 @@ void manageConnection(void)
 		turnOnSendingReceiving = 0;
 
 	}
+
 	//blueToothHandle();
 
 	//check stream, if disconnection occured
 	checkStream();
 	//check stream, if disconnection occured
+
+	if(chosenSensor == 1)
+	{
+		//zastopowanie odbioru i transmisji danych
+		removeTimer(&receiveStatus, &receiveID);
+		removeTimer(&transmitStatus, &transmitID);
+		//zastopowanie odbioru i transmisji danych
+	}
+	else if(chosenSensor == 2)
+	{
+		//zastopowanie odbioru i transmisji danych
+		removeTimer(&receiveStatus, &receiveID);
+		removeTimer(&transmitStatus, &transmitID);
+		//zastopowanie odbioru i transmisji danych
+	}
 }
 

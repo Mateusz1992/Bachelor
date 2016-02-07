@@ -25,6 +25,8 @@ uint32_t Status;*/
 void initBluetooth(void);
 void initLSM9DS1(void);
 
+int accelMeasurementsNum;
+
 int main(void)
 {
 //	status_t status;		// Declaration of return variable for DAVE3 APIs (toggle comment if required)
@@ -33,16 +35,25 @@ int main(void)
 	DAVE_Init();			// Initialization of DAVE Apps
 
 	initLSM9DS1();
-	//calibrate(TRUE);
+	calibrate(TRUE);
 
-	initBluetooth();
+	accel pomiary[100];
+
+	//initBluetooth();
+	accelMeasurementsNum = 0;
 
 	while(1)
 	{
-		if(initStatus)
+		if(	accelMeasurementsNum > 99)
 		{
-			readAccel1();
+			accelMeasurementsNum = 0;
 		}
+
+		/*if(initStatus)
+		{*/
+		readAccel1v1(pomiary);
+		/*}*/
+
 		manageConnection();
 	}
 	return 0;

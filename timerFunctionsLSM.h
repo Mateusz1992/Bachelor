@@ -27,10 +27,11 @@ extern uint8_t addressTimerI2CReadBytes;
 extern uint8_t subAddressTimerI2CReadBytes;
 extern uint16_t accelerationXYZ[6];
 
-
+void delay(void);
 
 void timerHandlerI2CreadByte(void *T);
 void timerHandlerI2CreadBytes(void *T);
+void timerHandlerI2CreadBytes1(void *T);
 void timerHandlerI2CwriteByte(void *T);
 
 

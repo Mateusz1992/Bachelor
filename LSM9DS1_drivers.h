@@ -16,8 +16,7 @@
 #include <DAVE3.h>
 #include <stdio.h>
 
-extern FILE * accelMeasurements;
-extern FILE * gyroMeasurements;
+extern int accelMeasurementsNum;
 
 extern int indexAccel;
 extern char lk[20];
@@ -67,6 +66,13 @@ int16_t mx, my, mz; // x, y, and z axis readings of the magnetometer
 
 int16_t temperature; // Chip temperature
 
+
+typedef struct
+{
+	int16_t ax;
+	int16_t ay;
+	int16_t az;
+}accel;
 
 typedef enum {
 	X_AXIS,
@@ -234,6 +240,8 @@ void readGyro1(void);
 // The readings are stored in the class' ax, ay, and az variables. Read
 // those _after_ calling readAccel().
 void readAccel1(void);
+
+void readAccel1v1(accel *a);
 
 void toAscii(int16_t accel, int *index);
 
@@ -470,6 +478,8 @@ void sleepGyro(bool enable);
 uint8_t getFIFOSamples(void);
 
 uint8_t I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_t count);
+
+uint8_t I2CreadBytes1(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_t count);
 
 void SPIreadBytes(uint8_t csPin, uint8_t subAddress, uint8_t * dest, uint8_t count);
 

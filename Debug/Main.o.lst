@@ -45,14 +45,15 @@
   45              		.comm	my,2,2
   46              		.comm	mz,2,2
   47              		.comm	temperature,2,2
-  48              		.section	.text.main,"ax",%progbits
-  49              		.align	2
-  50              		.global	main
-  51              		.thumb
-  52              		.thumb_func
-  54              	main:
-  55              	.LFB112:
-  56              		.file 1 "../Main.c"
+  48              		.comm	accelMeasurementsNum,4,4
+  49              		.section	.text.main,"ax",%progbits
+  50              		.align	2
+  51              		.global	main
+  52              		.thumb
+  53              		.thumb_func
+  55              	main:
+  56              	.LFB112:
+  57              		.file 1 "../Main.c"
    1:../Main.c     **** /*
    2:../Main.c     ****  * Main.c
    3:../Main.c     ****  *
@@ -80,199 +81,223 @@
   25:../Main.c     **** void initBluetooth(void);
   26:../Main.c     **** void initLSM9DS1(void);
   27:../Main.c     **** 
-  28:../Main.c     **** int main(void)
-  29:../Main.c     **** {
-  57              		.loc 1 29 0
-  58              		.cfi_startproc
-  59              		@ args = 0, pretend = 0, frame = 0
-  60              		@ frame_needed = 1, uses_anonymous_args = 0
-  61 0000 80B5     		push	{r7, lr}
-  62              	.LCFI0:
-  63              		.cfi_def_cfa_offset 8
-  64              		.cfi_offset 7, -8
-  65              		.cfi_offset 14, -4
-  66 0002 00AF     		add	r7, sp, #0
-  67              	.LCFI1:
-  68              		.cfi_def_cfa_register 7
-  30:../Main.c     **** //	status_t status;		// Declaration of return variable for DAVE3 APIs (toggle comment if required)
-  31:../Main.c     **** 
-  32:../Main.c     **** 
-  33:../Main.c     **** 	DAVE_Init();			// Initialization of DAVE Apps
-  69              		.loc 1 33 0
-  70 0004 FFF7FEFF 		bl	DAVE_Init
+  28:../Main.c     **** int accelMeasurementsNum;
+  29:../Main.c     **** 
+  30:../Main.c     **** int main(void)
+  31:../Main.c     **** {
+  58              		.loc 1 31 0
+  59              		.cfi_startproc
+  60              		@ args = 0, pretend = 0, frame = 600
+  61              		@ frame_needed = 1, uses_anonymous_args = 0
+  62 0000 80B5     		push	{r7, lr}
+  63              	.LCFI0:
+  64              		.cfi_def_cfa_offset 8
+  65              		.cfi_offset 7, -8
+  66              		.cfi_offset 14, -4
+  67 0002 ADF5167D 		sub	sp, sp, #600
+  68              	.LCFI1:
+  69              		.cfi_def_cfa_offset 608
+  70 0006 00AF     		add	r7, sp, #0
+  71              	.LCFI2:
+  72              		.cfi_def_cfa_register 7
+  32:../Main.c     **** //	status_t status;		// Declaration of return variable for DAVE3 APIs (toggle comment if required)
+  33:../Main.c     **** 
   34:../Main.c     **** 
-  35:../Main.c     **** 	initLSM9DS1();
-  71              		.loc 1 35 0
-  72 0008 FFF7FEFF 		bl	initLSM9DS1
-  36:../Main.c     **** 	//calibrate(TRUE);
-  37:../Main.c     **** 
-  38:../Main.c     **** 	initBluetooth();
-  73              		.loc 1 38 0
-  74 000c FFF7FEFF 		bl	initBluetooth
-  75              	.L3:
+  35:../Main.c     **** 	DAVE_Init();			// Initialization of DAVE Apps
+  73              		.loc 1 35 0
+  74 0008 FFF7FEFF 		bl	DAVE_Init
+  36:../Main.c     **** 
+  37:../Main.c     **** 	initLSM9DS1();
+  75              		.loc 1 37 0
+  76 000c FFF7FEFF 		bl	initLSM9DS1
+  38:../Main.c     **** 	calibrate(TRUE);
+  77              		.loc 1 38 0
+  78 0010 4FF00100 		mov	r0, #1
+  79 0014 FFF7FEFF 		bl	calibrate
   39:../Main.c     **** 
-  40:../Main.c     **** 	while(1)
-  41:../Main.c     **** 	{
-  42:../Main.c     **** 		if(initStatus)
-  76              		.loc 1 42 0
-  77 0010 40F20003 		movw	r3, #:lower16:initStatus
-  78 0014 C0F20003 		movt	r3, #:upper16:initStatus
-  79 0018 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
-  80 001a 002B     		cmp	r3, #0
-  81 001c 01D0     		beq	.L2
-  43:../Main.c     **** 		{
-  44:../Main.c     **** 			readAccel1();
-  82              		.loc 1 44 0
-  83 001e FFF7FEFF 		bl	readAccel1
-  84              	.L2:
-  45:../Main.c     **** 		}
-  46:../Main.c     **** 		manageConnection();
-  85              		.loc 1 46 0
-  86 0022 FFF7FEFF 		bl	manageConnection
-  47:../Main.c     **** 	}
-  87              		.loc 1 47 0
-  88 0026 F3E7     		b	.L3
-  89              		.cfi_endproc
-  90              	.LFE112:
-  92              		.section	.text.initBluetooth,"ax",%progbits
-  93              		.align	2
-  94              		.global	initBluetooth
-  95              		.thumb
-  96              		.thumb_func
-  98              	initBluetooth:
-  99              	.LFB113:
-  48:../Main.c     **** 	return 0;
-  49:../Main.c     **** }
-  50:../Main.c     **** 
-  51:../Main.c     **** void initBluetooth(void)
-  52:../Main.c     **** {
- 100              		.loc 1 52 0
- 101              		.cfi_startproc
- 102              		@ args = 0, pretend = 0, frame = 0
- 103              		@ frame_needed = 1, uses_anonymous_args = 0
- 104 0000 80B5     		push	{r7, lr}
- 105              	.LCFI2:
- 106              		.cfi_def_cfa_offset 8
- 107              		.cfi_offset 7, -8
- 108              		.cfi_offset 14, -4
- 109 0002 82B0     		sub	sp, sp, #8
- 110              	.LCFI3:
- 111              		.cfi_def_cfa_offset 16
- 112 0004 02AF     		add	r7, sp, #8
- 113              	.LCFI4:
- 114              		.cfi_def_cfa 7, 8
-  53:../Main.c     **** 	initVariables();
- 115              		.loc 1 53 0
- 116 0006 FFF7FEFF 		bl	initVariables
-  54:../Main.c     **** 	initCommandsAndAnswers();
- 117              		.loc 1 54 0
- 118 000a FFF7FEFF 		bl	initCommandsAndAnswers
-  55:../Main.c     **** 	initFlowControl();
- 119              		.loc 1 55 0
- 120 000e FFF7FEFF 		bl	initFlowControl
+  40:../Main.c     **** 	accel pomiary[100];
+  41:../Main.c     **** 
+  42:../Main.c     **** 	//initBluetooth();
+  43:../Main.c     **** 	accelMeasurementsNum = 0;
+  80              		.loc 1 43 0
+  81 0018 40F20003 		movw	r3, #:lower16:accelMeasurementsNum
+  82 001c C0F20003 		movt	r3, #:upper16:accelMeasurementsNum
+  83 0020 4FF00002 		mov	r2, #0
+  84 0024 1A60     		str	r2, [r3, #0]
+  85              	.L3:
+  44:../Main.c     **** 
+  45:../Main.c     **** 	while(1)
+  46:../Main.c     **** 	{
+  47:../Main.c     **** 		if(	accelMeasurementsNum > 99)
+  86              		.loc 1 47 0
+  87 0026 40F20003 		movw	r3, #:lower16:accelMeasurementsNum
+  88 002a C0F20003 		movt	r3, #:upper16:accelMeasurementsNum
+  89 002e 1B68     		ldr	r3, [r3, #0]
+  90 0030 632B     		cmp	r3, #99
+  91 0032 06DD     		ble	.L2
+  48:../Main.c     **** 		{
+  49:../Main.c     **** 			accelMeasurementsNum = 0;
+  92              		.loc 1 49 0
+  93 0034 40F20003 		movw	r3, #:lower16:accelMeasurementsNum
+  94 0038 C0F20003 		movt	r3, #:upper16:accelMeasurementsNum
+  95 003c 4FF00002 		mov	r2, #0
+  96 0040 1A60     		str	r2, [r3, #0]
+  97              	.L2:
+  50:../Main.c     **** 		}
+  51:../Main.c     **** 
+  52:../Main.c     **** 		/*if(initStatus)
+  53:../Main.c     **** 		{*/
+  54:../Main.c     **** 		readAccel1v1(pomiary);
+  98              		.loc 1 54 0
+  99 0042 3B46     		mov	r3, r7
+ 100 0044 1846     		mov	r0, r3
+ 101 0046 FFF7FEFF 		bl	readAccel1v1
+  55:../Main.c     **** 		/*}*/
   56:../Main.c     **** 
-  57:../Main.c     **** 	makeTimer(500, SYSTM001_PERIODIC, timerHandler, NULL, &Status, &TimerId);
- 121              		.loc 1 57 0
- 122 0012 40F20003 		movw	r3, #:lower16:Status
- 123 0016 C0F20003 		movt	r3, #:upper16:Status
- 124 001a 0093     		str	r3, [sp, #0]
- 125 001c 40F20003 		movw	r3, #:lower16:TimerId
- 126 0020 C0F20003 		movt	r3, #:upper16:TimerId
- 127 0024 0193     		str	r3, [sp, #4]
- 128 0026 4FF4FA70 		mov	r0, #500
- 129 002a 4FF00101 		mov	r1, #1
- 130 002e 40F20002 		movw	r2, #:lower16:timerHandler
- 131 0032 C0F20002 		movt	r2, #:upper16:timerHandler
- 132 0036 4FF00003 		mov	r3, #0
- 133 003a FFF7FEFF 		bl	makeTimer
-  58:../Main.c     **** }
- 134              		.loc 1 58 0
- 135 003e BD46     		mov	sp, r7
- 136 0040 80BD     		pop	{r7, pc}
- 137              		.cfi_endproc
- 138              	.LFE113:
- 140 0042 00BF     		.section	.text.initLSM9DS1,"ax",%progbits
- 141              		.align	2
- 142              		.global	initLSM9DS1
- 143              		.thumb
- 144              		.thumb_func
- 146              	initLSM9DS1:
- 147              	.LFB114:
-  59:../Main.c     **** 
-  60:../Main.c     **** void initLSM9DS1(void)
-  61:../Main.c     **** {
- 148              		.loc 1 61 0
- 149              		.cfi_startproc
- 150              		@ args = 0, pretend = 0, frame = 8
- 151              		@ frame_needed = 1, uses_anonymous_args = 0
- 152 0000 80B5     		push	{r7, lr}
- 153              	.LCFI5:
- 154              		.cfi_def_cfa_offset 8
- 155              		.cfi_offset 7, -8
- 156              		.cfi_offset 14, -4
- 157 0002 82B0     		sub	sp, sp, #8
- 158              	.LCFI6:
- 159              		.cfi_def_cfa_offset 16
- 160 0004 00AF     		add	r7, sp, #0
- 161              	.LCFI7:
- 162              		.cfi_def_cfa_register 7
-  62:../Main.c     **** 	init(IMU_MODE_I2C, LSM9DS1_AG_ADDR(1), LSM9DS1_M_ADDR(1));
- 163              		.loc 1 62 0
- 164 0006 4FF00100 		mov	r0, #1
- 165 000a 4FF06B01 		mov	r1, #107
- 166 000e 4FF01E02 		mov	r2, #30
- 167 0012 FFF7FEFF 		bl	init
-  63:../Main.c     **** 
-  64:../Main.c     **** 	settings.device.commInterface = IMU_MODE_I2C;
- 168              		.loc 1 64 0
- 169 0016 40F20003 		movw	r3, #:lower16:settings
- 170 001a C0F20003 		movt	r3, #:upper16:settings
- 171 001e 4FF00102 		mov	r2, #1
- 172 0022 1A70     		strb	r2, [r3, #0]
-  65:../Main.c     **** 	settings.device.mAddress = LSM9DS1_M;
- 173              		.loc 1 65 0
- 174 0024 40F20003 		movw	r3, #:lower16:settings
- 175 0028 C0F20003 		movt	r3, #:upper16:settings
- 176 002c 4FF01E02 		mov	r2, #30
- 177 0030 9A70     		strb	r2, [r3, #2]
-  66:../Main.c     **** 	settings.device.agAddress = LSM9DS1_AG;
- 178              		.loc 1 66 0
- 179 0032 40F20003 		movw	r3, #:lower16:settings
- 180 0036 C0F20003 		movt	r3, #:upper16:settings
- 181 003a 4FF06B02 		mov	r2, #107
- 182 003e 5A70     		strb	r2, [r3, #1]
+  57:../Main.c     **** 		//manageConnection();
+  58:../Main.c     **** 	}
+ 102              		.loc 1 58 0
+ 103 004a ECE7     		b	.L3
+ 104              		.cfi_endproc
+ 105              	.LFE112:
+ 107              		.section	.text.initBluetooth,"ax",%progbits
+ 108              		.align	2
+ 109              		.global	initBluetooth
+ 110              		.thumb
+ 111              		.thumb_func
+ 113              	initBluetooth:
+ 114              	.LFB113:
+  59:../Main.c     **** 	return 0;
+  60:../Main.c     **** }
+  61:../Main.c     **** 
+  62:../Main.c     **** void initBluetooth(void)
+  63:../Main.c     **** {
+ 115              		.loc 1 63 0
+ 116              		.cfi_startproc
+ 117              		@ args = 0, pretend = 0, frame = 0
+ 118              		@ frame_needed = 1, uses_anonymous_args = 0
+ 119 0000 80B5     		push	{r7, lr}
+ 120              	.LCFI3:
+ 121              		.cfi_def_cfa_offset 8
+ 122              		.cfi_offset 7, -8
+ 123              		.cfi_offset 14, -4
+ 124 0002 82B0     		sub	sp, sp, #8
+ 125              	.LCFI4:
+ 126              		.cfi_def_cfa_offset 16
+ 127 0004 02AF     		add	r7, sp, #8
+ 128              	.LCFI5:
+ 129              		.cfi_def_cfa 7, 8
+  64:../Main.c     **** 	initVariables();
+ 130              		.loc 1 64 0
+ 131 0006 FFF7FEFF 		bl	initVariables
+  65:../Main.c     **** 	initCommandsAndAnswers();
+ 132              		.loc 1 65 0
+ 133 000a FFF7FEFF 		bl	initCommandsAndAnswers
+  66:../Main.c     **** 	initFlowControl();
+ 134              		.loc 1 66 0
+ 135 000e FFF7FEFF 		bl	initFlowControl
   67:../Main.c     **** 
-  68:../Main.c     **** 	if(!begin())
- 183              		.loc 1 68 0
- 184 0040 FFF7FEFF 		bl	begin
- 185 0044 0346     		mov	r3, r0
- 186 0046 002B     		cmp	r3, #0
- 187 0048 02D1     		bne	.L5
- 188              	.LBB2:
-  69:../Main.c     **** 	{
-  70:../Main.c     **** 		int k = 0;
- 189              		.loc 1 70 0
- 190 004a 4FF00003 		mov	r3, #0
- 191 004e 7B60     		str	r3, [r7, #4]
- 192              	.L5:
- 193              	.LBE2:
-  71:../Main.c     **** 	}
-  72:../Main.c     **** }
- 194              		.loc 1 72 0
- 195 0050 07F10807 		add	r7, r7, #8
- 196 0054 BD46     		mov	sp, r7
- 197 0056 80BD     		pop	{r7, pc}
- 198              		.cfi_endproc
- 199              	.LFE114:
- 201              		.text
- 202              	.Letext0:
- 203              		.file 2 "c:\\dave-3.1.10\\arm-gcc\\bin\\../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/i
- 204              		.file 3 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
- 205              		.file 4 "../LSM9DS1_Types.h"
- 206              		.file 5 "C:\\DAVE-3.1.10\\eclipse\\/../CMSIS/Include/core_cm4.h"
- 207              		.file 6 "../LSM9DS1_drivers.h"
- 208              		.file 7 "../Bluetooth.h"
- 209              		.file 8 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
+  68:../Main.c     **** 	makeTimer(500, SYSTM001_PERIODIC, timerHandler, NULL, &Status, &TimerId);
+ 136              		.loc 1 68 0
+ 137 0012 40F20003 		movw	r3, #:lower16:Status
+ 138 0016 C0F20003 		movt	r3, #:upper16:Status
+ 139 001a 0093     		str	r3, [sp, #0]
+ 140 001c 40F20003 		movw	r3, #:lower16:TimerId
+ 141 0020 C0F20003 		movt	r3, #:upper16:TimerId
+ 142 0024 0193     		str	r3, [sp, #4]
+ 143 0026 4FF4FA70 		mov	r0, #500
+ 144 002a 4FF00101 		mov	r1, #1
+ 145 002e 40F20002 		movw	r2, #:lower16:timerHandler
+ 146 0032 C0F20002 		movt	r2, #:upper16:timerHandler
+ 147 0036 4FF00003 		mov	r3, #0
+ 148 003a FFF7FEFF 		bl	makeTimer
+  69:../Main.c     **** }
+ 149              		.loc 1 69 0
+ 150 003e BD46     		mov	sp, r7
+ 151 0040 80BD     		pop	{r7, pc}
+ 152              		.cfi_endproc
+ 153              	.LFE113:
+ 155 0042 00BF     		.section	.text.initLSM9DS1,"ax",%progbits
+ 156              		.align	2
+ 157              		.global	initLSM9DS1
+ 158              		.thumb
+ 159              		.thumb_func
+ 161              	initLSM9DS1:
+ 162              	.LFB114:
+  70:../Main.c     **** 
+  71:../Main.c     **** void initLSM9DS1(void)
+  72:../Main.c     **** {
+ 163              		.loc 1 72 0
+ 164              		.cfi_startproc
+ 165              		@ args = 0, pretend = 0, frame = 8
+ 166              		@ frame_needed = 1, uses_anonymous_args = 0
+ 167 0000 80B5     		push	{r7, lr}
+ 168              	.LCFI6:
+ 169              		.cfi_def_cfa_offset 8
+ 170              		.cfi_offset 7, -8
+ 171              		.cfi_offset 14, -4
+ 172 0002 82B0     		sub	sp, sp, #8
+ 173              	.LCFI7:
+ 174              		.cfi_def_cfa_offset 16
+ 175 0004 00AF     		add	r7, sp, #0
+ 176              	.LCFI8:
+ 177              		.cfi_def_cfa_register 7
+  73:../Main.c     **** 	init(IMU_MODE_I2C, LSM9DS1_AG_ADDR(1), LSM9DS1_M_ADDR(1));
+ 178              		.loc 1 73 0
+ 179 0006 4FF00100 		mov	r0, #1
+ 180 000a 4FF06B01 		mov	r1, #107
+ 181 000e 4FF01E02 		mov	r2, #30
+ 182 0012 FFF7FEFF 		bl	init
+  74:../Main.c     **** 
+  75:../Main.c     **** 	settings.device.commInterface = IMU_MODE_I2C;
+ 183              		.loc 1 75 0
+ 184 0016 40F20003 		movw	r3, #:lower16:settings
+ 185 001a C0F20003 		movt	r3, #:upper16:settings
+ 186 001e 4FF00102 		mov	r2, #1
+ 187 0022 1A70     		strb	r2, [r3, #0]
+  76:../Main.c     **** 	settings.device.mAddress = LSM9DS1_M;
+ 188              		.loc 1 76 0
+ 189 0024 40F20003 		movw	r3, #:lower16:settings
+ 190 0028 C0F20003 		movt	r3, #:upper16:settings
+ 191 002c 4FF01E02 		mov	r2, #30
+ 192 0030 9A70     		strb	r2, [r3, #2]
+  77:../Main.c     **** 	settings.device.agAddress = LSM9DS1_AG;
+ 193              		.loc 1 77 0
+ 194 0032 40F20003 		movw	r3, #:lower16:settings
+ 195 0036 C0F20003 		movt	r3, #:upper16:settings
+ 196 003a 4FF06B02 		mov	r2, #107
+ 197 003e 5A70     		strb	r2, [r3, #1]
+  78:../Main.c     **** 
+  79:../Main.c     **** 	if(!begin())
+ 198              		.loc 1 79 0
+ 199 0040 FFF7FEFF 		bl	begin
+ 200 0044 0346     		mov	r3, r0
+ 201 0046 002B     		cmp	r3, #0
+ 202 0048 02D1     		bne	.L5
+ 203              	.LBB2:
+  80:../Main.c     **** 	{
+  81:../Main.c     **** 		int k = 0;
+ 204              		.loc 1 81 0
+ 205 004a 4FF00003 		mov	r3, #0
+ 206 004e 7B60     		str	r3, [r7, #4]
+ 207              	.L5:
+ 208              	.LBE2:
+  82:../Main.c     **** 	}
+  83:../Main.c     **** }
+ 209              		.loc 1 83 0
+ 210 0050 07F10807 		add	r7, r7, #8
+ 211 0054 BD46     		mov	sp, r7
+ 212 0056 80BD     		pop	{r7, pc}
+ 213              		.cfi_endproc
+ 214              	.LFE114:
+ 216              		.text
+ 217              	.Letext0:
+ 218              		.file 2 "c:\\dave-3.1.10\\arm-gcc\\bin\\../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/i
+ 219              		.file 3 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
+ 220              		.file 4 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
+ 221              		.file 5 "../LSM9DS1_Types.h"
+ 222              		.file 6 "../LSM9DS1_drivers.h"
+ 223              		.file 7 "C:\\DAVE-3.1.10\\eclipse\\/../CMSIS/Include/core_cm4.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 Main.c
                             *COM*:00000004 TimerId
@@ -304,12 +329,13 @@ DEFINED SYMBOLS
                             *COM*:00000002 my
                             *COM*:00000002 mz
                             *COM*:00000002 temperature
-C:\Users\Mateusz\AppData\Local\Temp\ccAEQ1Ff.s:49     .text.main:00000000 $t
-C:\Users\Mateusz\AppData\Local\Temp\ccAEQ1Ff.s:54     .text.main:00000000 main
-C:\Users\Mateusz\AppData\Local\Temp\ccAEQ1Ff.s:146    .text.initLSM9DS1:00000000 initLSM9DS1
-C:\Users\Mateusz\AppData\Local\Temp\ccAEQ1Ff.s:98     .text.initBluetooth:00000000 initBluetooth
-C:\Users\Mateusz\AppData\Local\Temp\ccAEQ1Ff.s:93     .text.initBluetooth:00000000 $t
-C:\Users\Mateusz\AppData\Local\Temp\ccAEQ1Ff.s:141    .text.initLSM9DS1:00000000 $t
+                            *COM*:00000004 accelMeasurementsNum
+C:\Users\Mateusz\AppData\Local\Temp\ccwDklAe.s:50     .text.main:00000000 $t
+C:\Users\Mateusz\AppData\Local\Temp\ccwDklAe.s:55     .text.main:00000000 main
+C:\Users\Mateusz\AppData\Local\Temp\ccwDklAe.s:161    .text.initLSM9DS1:00000000 initLSM9DS1
+C:\Users\Mateusz\AppData\Local\Temp\ccwDklAe.s:108    .text.initBluetooth:00000000 $t
+C:\Users\Mateusz\AppData\Local\Temp\ccwDklAe.s:113    .text.initBluetooth:00000000 initBluetooth
+C:\Users\Mateusz\AppData\Local\Temp\ccwDklAe.s:156    .text.initLSM9DS1:00000000 $t
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.35166846b5321d4273ad8c4248893ac3
                            .group:00000000 wm4.XMC4500.h.45.215f4b8c79f46c7645c15373868d08c0
@@ -358,9 +384,8 @@ C:\Users\Mateusz\AppData\Local\Temp\ccAEQ1Ff.s:141    .text.initLSM9DS1:00000000
 
 UNDEFINED SYMBOLS
 DAVE_Init
-initStatus
-readAccel1
-manageConnection
+calibrate
+readAccel1v1
 initVariables
 initCommandsAndAnswers
 initFlowControl

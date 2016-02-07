@@ -20,6 +20,8 @@
 #define LSM9DS1_COMMUNICATION_TIMEOUT 1000
 
 
+int accelMeasurementsNum;
+
 char lk[20];
 /*Status = SYSTM001_ERROR;
 TimerId = 0;
@@ -28,6 +30,7 @@ WriteTimerStatus = SYSTM001_ERROR;
 WriteTimerId = 0;*/
 
 int indexAccel = 0;
+
 
 float magSensitivity[4] = {0.00014, 0.00029, 0.00043, 0.00058};
 
@@ -304,6 +307,7 @@ void xgReadBytes(uint8_t subAddress, uint8_t * dest, uint8_t count)
 	// gyro-specific I2C address or SPI CS pin.
 	if (settings.device.commInterface == IMU_MODE_I2C)
 		I2CreadBytes(_xgAddress, subAddress, dest, count);
+		//I2CreadBytes1(_xgAddress, subAddress, dest, count);
 	else if (settings.device.commInterface == IMU_MODE_SPI)
 		SPIreadBytes(_xgAddress, subAddress, dest, count);
 }
@@ -312,7 +316,7 @@ uint8_t I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_
 {
 	addressTimerI2CReadBytes = address;
 	subAddressTimerI2CReadBytes = subAddress;
-	makeTimer(300, SYSTM001_PERIODIC, timerHandlerI2CreadBytes, NULL, &StatusReadBytes, &TimerIdReadBytes);
+	makeTimer(5, SYSTM001_PERIODIC, timerHandlerI2CreadBytes, NULL, &StatusReadBytes, &TimerIdReadBytes);
 
 	while(1)
 	{
@@ -357,7 +361,62 @@ uint8_t I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_
 			}
 			else
 			{
-				makeTimer(100, SYSTM001_PERIODIC, timerHandlerI2CreadBytes, NULL, &StatusReadBytes, &TimerIdReadBytes);
+				makeTimer(5, SYSTM001_PERIODIC, timerHandlerI2CreadBytes, NULL, &StatusReadBytes, &TimerIdReadBytes);
+			}
+		}
+	}
+}
+
+uint8_t I2CreadBytes1(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_t count)
+{
+	addressTimerI2CReadBytes = address;
+	subAddressTimerI2CReadBytes = subAddress;
+	makeTimer(200, SYSTM001_PERIODIC, timerHandlerI2CreadBytes1, NULL, &StatusReadBytes, &TimerIdReadBytes);
+
+	while(1)
+	{
+		if(8 == indexI2CreadBytes)
+		{
+			removeTimer(&StatusReadBytes, &TimerIdReadBytes);
+
+			indexI2CreadBytes = 0;
+			addressTimerI2CReadBytes = 0;
+			subAddressTimerI2CReadBytes = 0;
+
+			StatusReadBytes = SYSTM001_ERROR;
+			TimerIdReadBytes = 0;
+
+			addressTimerI2CReadBytes = address;
+			subAddressTimerI2CReadBytes = subAddress;
+
+			//indexAccel = indexAccel + 1;
+			subAddressTimerI2CReadBytes = subAddressTimerI2CReadBytes + indexAccel;
+
+			if(indexAccel == count)
+			{
+				/*dest[0] = (uint8_t)accelerationXYZ[0];
+				dest[1] = (uint8_t)accelerationXYZ[1];
+				dest[2] = (uint8_t)accelerationXYZ[2];
+				dest[3] = (uint8_t)accelerationXYZ[3];
+				dest[4] = (uint8_t)accelerationXYZ[4];
+				dest[5] = (uint8_t)accelerationXYZ[5];*/
+				int k = 0;
+				for(k = 0; k < count; k++)
+				{
+					dest[k] = (uint8_t)accelerationXYZ[k];
+				}
+
+				/*for(k = 0; k < 6; k++)
+				{
+					accelerationXYZ[k] = 0;
+				}*/
+				indexAccel = 0;
+
+				break;
+			}
+			else
+			{
+				makeTimer(100, SYSTM001_PERIODIC, timerHandlerI2CreadBytes1, NULL, &StatusReadBytes, &TimerIdReadBytes);
 			}
 		}
 	}
@@ -708,6 +767,12 @@ void readAccel1(void)
 	ay = calcAccel(ay);
 	az = calcAccel(az);
 
+	/*a[accelMeasurementsNum].ax = ax;
+	a[accelMeasurementsNum].ay = ay;
+	a[accelMeasurementsNum].az = az;
+
+	accelMeasurementsNum++;*/
+
 	toAscii(ax, &index);
 	toAscii(ay, &index);
 	toAscii(az, &index);
@@ -721,6 +786,65 @@ void readAccel1(void)
 	}
 
 }
+
+
+void readAccel1v1(accel *a)
+{
+	uint8_t temp[6]; // We'll read six bytes from the accelerometer into temp
+	int index = 0;
+
+	xgReadBytes(OUT_X_L_XL, temp, 6); // Read 6 bytes, beginning at OUT_X_L_XL
+
+	ax = (temp[1] << 8) | temp[0]; // Store x-axis values into ax
+	ay = (temp[3] << 8) | temp[2]; // Store y-axis values into ay
+	az = (temp[5] << 8) | temp[4]; // Store z-axis values into az
+
+	if (_autoCalc)
+	{
+		ax -= aBiasRaw[X_AXIS];
+		ay -= aBiasRaw[Y_AXIS];
+		az -= aBiasRaw[Z_AXIS];
+	}
+
+	ax = calcAccel(ax);
+	ay = calcAccel(ay);
+	az = calcAccel(az);
+
+
+	if(accelMeasurementsNum > 99)
+	{
+		a[accelMeasurementsNum].ax = ax;
+		a[accelMeasurementsNum].ay = ay;
+		a[accelMeasurementsNum].az = az;
+
+		return;
+	}
+
+	a[accelMeasurementsNum].ax = ax;
+	a[accelMeasurementsNum].ay = ay;
+	a[accelMeasurementsNum].az = az;
+
+	accelMeasurementsNum++;
+	/*a[accelMeasurementsNum].ax = ax;
+	a[accelMeasurementsNum].ay = ay;
+	a[accelMeasurementsNum].az = az;
+
+	accelMeasurementsNum++;*/
+
+	toAscii(ax, &index);
+	toAscii(ay, &index);
+	toAscii(az, &index);
+
+	/*lk[0] = '0' + ax;
+	lk[1] = '0' + ay;
+	lk[2] = '0' + az;*/
+	for(int k = 0; k < 6; k++)
+	{
+		accelerationXYZ[k] = 0;
+	}
+}
+
+
 
 void toAscii(int16_t accel, int *index)
 {

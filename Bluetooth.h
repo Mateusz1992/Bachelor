@@ -21,6 +21,8 @@ extern char copiedData[MAX_READ_DATA];
 extern unsigned char dataToSend[100];
 extern unsigned char dataToReceive[100];
 
+extern int chosenSensor;
+
 //extern char lk[4];
 
 extern int lengthReceive;
@@ -79,6 +81,8 @@ void emergencyReadHandler(void *T);
 //handlery do wysylania i odbierania wiadomosci z bluetooth w stream mode
 void receive(void *T);
 void transmit(void *T);
+
+void transmitToSensor(void *T); //wysylanie do czujnika
 //handlery do wysylania i odbierania wiadomosci z bluetooth w stream mode
 
 void sendBluetooth(char *command1, char *answer);

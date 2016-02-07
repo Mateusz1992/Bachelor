@@ -152,8 +152,8 @@
  2, 4, 8, 16, 32, 64.</toolTipHelpDescription>
     <item name="2" evalFunction="&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;function ForwardMapping()&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var value = SCM.getIntValue(currentResource);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var Res = SCM.getResource(&quot;channel/rbctr_size&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (value == 1 ) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(Res,1);&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;} else if (value === 0) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(Res,1);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;function BackwardMapping()&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var Res = SCM.getResource(&quot;channel/rbctr_size&quot;); &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var value = SCM.getIntValue(Res); &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (value === 1 ) { &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,1);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;} else if (value == -1 ){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,1);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,0);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;" URI="http://www.infineon.com/1.0.28/app/i2c001/0/i2c001_irwrxfifosize/0" downWardmappedList="//@consumed.38" maxValue="1" minValue="0">
       <defaultValue xsi:type="ResourceModel:IntegerValue" value="1"/>
-      <localValue xsi:type="ResourceModel:StringValue" value="1"/>
-      <globalValue xsi:type="ResourceModel:IntegerValue" value="1"/>
+      <localValue xsi:type="ResourceModel:IntegerValue" value="0"/>
+      <globalValue xsi:type="ResourceModel:IntegerValue" value="0"/>
       <toolTipHelpDescription>The receive FIFO size can be configured by the user. The values normally selected are:
  2, 4, 8, 16, 32, 64. Here the value selected is 2.</toolTipHelpDescription>
     </item>
@@ -164,10 +164,10 @@
       <toolTipHelpDescription>The receive FIFO size can be configured by the user. The values normally selected are:
  2, 4, 8, 16, 32, 64. Here the value selected is 4.</toolTipHelpDescription>
     </item>
-    <item name="8" evalFunction="&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;function ForwardMapping()&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var value = SCM.getIntValue(currentResource);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var Res = SCM.getResource(&quot;channel/rbctr_size&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (value == 1 ) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(Res,3);&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;} else if (value === 1) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(Res,0);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;function BackwardMapping()&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var Res = SCM.getResource(&quot;channel/rbctr_size&quot;); &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var value = SCM.getIntValue(Res); &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (value === 3 ) { &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,1);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;} else if (value == -1 ){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,0);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,0);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;" URI="http://www.infineon.com/1.0.28/app/i2c001/0/i2c001_irwrxfifosize/2" maxValue="1" minValue="0">
+    <item name="8" evalFunction="&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;function ForwardMapping()&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var value = SCM.getIntValue(currentResource);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var Res = SCM.getResource(&quot;channel/rbctr_size&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (value == 1 ) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(Res,3);&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;} else if (value === 1) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(Res,0);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;function BackwardMapping()&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;{&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var Res = SCM.getResource(&quot;channel/rbctr_size&quot;); &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;var value = SCM.getIntValue(Res); &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (value === 3 ) { &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,1);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;} else if (value == -1 ){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,0);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;SCM.setIntValue(currentResource,0);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;" URI="http://www.infineon.com/1.0.28/app/i2c001/0/i2c001_irwrxfifosize/2" downWardmappedList="//@consumed.38" maxValue="1" minValue="0">
       <defaultValue xsi:type="ResourceModel:IntegerValue" value="0"/>
-      <localValue xsi:type="ResourceModel:StringValue" value="0"/>
-      <globalValue xsi:type="ResourceModel:StringValue" value="0"/>
+      <localValue xsi:type="ResourceModel:StringValue" value="1"/>
+      <globalValue xsi:type="ResourceModel:IntegerValue" value="1"/>
       <toolTipHelpDescription>The receive FIFO size can be configured by the user. The values normally selected are:
  2, 4, 8, 16, 32, 64. Here the value selected is 8.</toolTipHelpDescription>
     </item>
@@ -659,10 +659,10 @@ specific interrupt signal otherwise there
     <downWardmappedList xsi:type="ResourceModel:BitField" href="../../USIC2/USIC2_2.dd#//@provided.19"/>
     <globalValue xsi:type="ResourceModel:IntegerValue" value="2"/>
   </consumed>
-  <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.28/app/i2c001/0/channel/rbctr_size" upWardMappingList="//@provided.22/@item.5 //@provided.23/@item.0 //@provided.23/@item.1 //@provided.23/@item.3 //@provided.23/@item.4 //@provided.23/@item.5" isSystemDefined="true">
-    <localValue xsi:type="ResourceModel:IntegerValue" value="1"/>
+  <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.28/app/i2c001/0/channel/rbctr_size" upWardMappingList="//@provided.22/@item.5 //@provided.23/@item.0 //@provided.23/@item.1 //@provided.23/@item.3 //@provided.23/@item.4 //@provided.23/@item.5 //@provided.23/@item.2" isSystemDefined="true">
+    <localValue xsi:type="ResourceModel:IntegerValue" value="3"/>
     <downWardmappedList xsi:type="ResourceModel:BitField" href="../../USIC2/USIC2_2.dd#//@provided.20"/>
-    <globalValue xsi:type="ResourceModel:IntegerValue" value="1"/>
+    <globalValue xsi:type="ResourceModel:IntegerValue" value="3"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.28/app/i2c001/0/channel/tbctr/limit" upWardMappingList="//@provided.24" isSystemDefined="true">
     <localValue xsi:type="ResourceModel:IntegerValue" value="2"/>
@@ -675,9 +675,9 @@ specific interrupt signal otherwise there
     <globalValue xsi:type="ResourceModel:IntegerValue" value="1"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.28/app/i2c001/0/channel/brg/pdiv" upWardMappingList="//@provided.19" isSystemDefined="true">
-    <localValue xsi:type="ResourceModel:IntegerValue" value="0"/>
+    <localValue xsi:type="ResourceModel:IntegerValue" value="3a"/>
     <downWardmappedList xsi:type="ResourceModel:BitField" href="../../USIC2/USIC2_2.dd#//@provided.23"/>
-    <globalValue xsi:type="ResourceModel:IntegerValue" value="0"/>
+    <globalValue xsi:type="ResourceModel:IntegerValue" value="3a"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.28/app/i2c001/0/channel/sclkout" isSystemDefined="true">
     <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../USIC2/USIC2_2.dd#//@provided.24"/>
@@ -709,9 +709,9 @@ specific interrupt signal otherwise there
     <globalValue xsi:type="ResourceModel:IntegerValue" value="1"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.28/app/i2c001/0/channel/fdr/step" upWardMappingList="//@provided.19" isSystemDefined="true">
-    <localValue xsi:type="ResourceModel:IntegerValue" value="fffffffffffffc00"/>
+    <localValue xsi:type="ResourceModel:IntegerValue" value="1f7"/>
     <downWardmappedList xsi:type="ResourceModel:BitField" href="../../USIC2/USIC2_2.dd#//@provided.25"/>
-    <globalValue xsi:type="ResourceModel:IntegerValue" value="fffffffffffffc00"/>
+    <globalValue xsi:type="ResourceModel:IntegerValue" value="1f7"/>
   </consumed>
   <propertyConstants name="uridevice" value="device/">
     <propertyConstants name="uriperi_i2c001" value="peripheral/usic/">

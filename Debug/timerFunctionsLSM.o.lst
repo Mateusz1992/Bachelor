@@ -141,6 +141,8 @@
  136              	.LCFI2:
  137              		.cfi_def_cfa_register 7
  138 0006 7860     		str	r0, [r7, #4]
+ 139 0008 00E0     		b	.L16
+ 140              	.L17:
   29:../timerFunctionsLSM.c **** 	//I2C001_DataType data1,data2,data3,data4,data5, data6, data7;
   30:../timerFunctionsLSM.c **** 
   31:../timerFunctionsLSM.c **** 
@@ -149,867 +151,1491 @@
   34:../timerFunctionsLSM.c **** 	uint8_t data; // `data` will store the register data
   35:../timerFunctionsLSM.c **** 
   36:../timerFunctionsLSM.c **** 	//wyslanie warunku startowego
-  37:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadByte)
- 139              		.loc 1 37 0
- 140 0008 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 141 000c C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 142 0010 1B68     		ldr	r3, [r3, #0]
- 143 0012 002B     		cmp	r3, #0
- 144 0014 25D1     		bne	.L2
- 145              	.LBB2:
-  38:../timerFunctionsLSM.c **** 	{
-  39:../timerFunctionsLSM.c **** 		I2C001_DataType data1;
-  40:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
- 146              		.loc 1 40 0
- 147 0016 4FF00403 		mov	r3, #4
- 148 001a 7B77     		strb	r3, [r7, #29]
-  41:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimer<<1) | I2C_WRITE);
- 149              		.loc 1 41 0
- 150 001c 40F20003 		movw	r3, #:lower16:addressTimer
- 151 0020 C0F20003 		movt	r3, #:upper16:addressTimer
- 152 0024 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 153 0026 4FEA4303 		lsl	r3, r3, #1
- 154 002a DBB2     		uxtb	r3, r3
- 155 002c 3B77     		strb	r3, [r7, #28]
-  42:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
- 156              		.loc 1 42 0
- 157 002e 00BF     		nop
- 158              	.L3:
- 159              		.loc 1 42 0 is_stmt 0 discriminator 1
- 160 0030 07F11C03 		add	r3, r7, #28
- 161 0034 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 162 0038 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 163 003c 1946     		mov	r1, r3
- 164 003e FFF7FEFF 		bl	I2C001_WriteData
- 165 0042 0346     		mov	r3, r0
- 166 0044 002B     		cmp	r3, #0
- 167 0046 F3D0     		beq	.L3
-  43:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
- 168              		.loc 1 43 0 is_stmt 1
- 169 0048 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 170 004c C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 171 0050 1B68     		ldr	r3, [r3, #0]
- 172 0052 03F10102 		add	r2, r3, #1
- 173 0056 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 174 005a C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 175 005e 1A60     		str	r2, [r3, #0]
- 176 0060 C8E0     		b	.L1
- 177              	.L2:
- 178              	.LBE2:
-  44:../timerFunctionsLSM.c **** 	}
-  45:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadByte)
- 179              		.loc 1 45 0
- 180 0062 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 181 0066 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 182 006a 1B68     		ldr	r3, [r3, #0]
- 183 006c 012B     		cmp	r3, #1
- 184 006e 22D1     		bne	.L5
- 185              	.LBB3:
-  46:../timerFunctionsLSM.c **** 	{
-  47:../timerFunctionsLSM.c **** 		I2C001_DataType data3;
-  48:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MTxData;
- 186              		.loc 1 48 0
- 187 0070 4FF00003 		mov	r3, #0
- 188 0074 7B76     		strb	r3, [r7, #25]
-  49:../timerFunctionsLSM.c **** 		data3.Data1.Data = subAddressTimer;
- 189              		.loc 1 49 0
- 190 0076 40F20003 		movw	r3, #:lower16:subAddressTimer
- 191 007a C0F20003 		movt	r3, #:upper16:subAddressTimer
- 192 007e 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 193 0080 3B76     		strb	r3, [r7, #24]
-  50:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
- 194              		.loc 1 50 0
- 195 0082 00BF     		nop
- 196              	.L6:
- 197              		.loc 1 50 0 is_stmt 0 discriminator 1
- 198 0084 07F11803 		add	r3, r7, #24
- 199 0088 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 200 008c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 201 0090 1946     		mov	r1, r3
- 202 0092 FFF7FEFF 		bl	I2C001_WriteData
- 203 0096 0346     		mov	r3, r0
- 204 0098 002B     		cmp	r3, #0
- 205 009a F3D0     		beq	.L6
-  51:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
- 206              		.loc 1 51 0 is_stmt 1
- 207 009c 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 208 00a0 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 209 00a4 1B68     		ldr	r3, [r3, #0]
- 210 00a6 03F10102 		add	r2, r3, #1
- 211 00aa 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 212 00ae C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 213 00b2 1A60     		str	r2, [r3, #0]
- 214 00b4 9EE0     		b	.L1
- 215              	.L5:
- 216              	.LBE3:
-  52:../timerFunctionsLSM.c **** 	}
-  53:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadByte)
- 217              		.loc 1 53 0
- 218 00b6 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 219 00ba C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 220 00be 1B68     		ldr	r3, [r3, #0]
- 221 00c0 022B     		cmp	r3, #2
- 222 00c2 28D1     		bne	.L7
- 223              	.LBB4:
-  54:../timerFunctionsLSM.c **** 	{
-  55:../timerFunctionsLSM.c **** 		I2C001_DataType data5;
-  56:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MRStart;
- 224              		.loc 1 56 0
- 225 00c4 4FF00503 		mov	r3, #5
- 226 00c8 7B75     		strb	r3, [r7, #21]
-  57:../timerFunctionsLSM.c **** 		data5.Data1.Data = ((addressTimer<<1) | I2C_READ);
- 227              		.loc 1 57 0
- 228 00ca 40F20003 		movw	r3, #:lower16:addressTimer
- 229 00ce C0F20003 		movt	r3, #:upper16:addressTimer
- 230 00d2 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 231 00d4 4FEA4303 		lsl	r3, r3, #1
- 232 00d8 DBB2     		uxtb	r3, r3
- 233 00da 43F00103 		orr	r3, r3, #1
- 234 00de DBB2     		uxtb	r3, r3
- 235 00e0 3B75     		strb	r3, [r7, #20]
-  58:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
- 236              		.loc 1 58 0
- 237 00e2 00BF     		nop
- 238              	.L8:
- 239              		.loc 1 58 0 is_stmt 0 discriminator 1
- 240 00e4 07F11403 		add	r3, r7, #20
- 241 00e8 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 242 00ec C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 243 00f0 1946     		mov	r1, r3
- 244 00f2 FFF7FEFF 		bl	I2C001_WriteData
- 245 00f6 0346     		mov	r3, r0
- 246 00f8 002B     		cmp	r3, #0
- 247 00fa F3D0     		beq	.L8
-  59:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
- 248              		.loc 1 59 0 is_stmt 1
- 249 00fc 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 250 0100 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 251 0104 1B68     		ldr	r3, [r3, #0]
- 252 0106 03F10102 		add	r2, r3, #1
- 253 010a 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 254 010e C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 255 0112 1A60     		str	r2, [r3, #0]
- 256 0114 6EE0     		b	.L1
- 257              	.L7:
- 258              	.LBE4:
-  60:../timerFunctionsLSM.c **** 	}
-  61:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadByte)
- 259              		.loc 1 61 0
- 260 0116 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 261 011a C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 262 011e 1B68     		ldr	r3, [r3, #0]
- 263 0120 032B     		cmp	r3, #3
- 264 0122 1FD1     		bne	.L9
- 265              	.LBB5:
-  62:../timerFunctionsLSM.c **** 	{
-  63:../timerFunctionsLSM.c **** 		I2C001_DataType data6;
-  64:../timerFunctionsLSM.c **** 		data6.Data1.TDF_Type = I2C_TDF_MRxAck1;
- 266              		.loc 1 64 0
- 267 0124 4FF00303 		mov	r3, #3
- 268 0128 7B74     		strb	r3, [r7, #17]
-  65:../timerFunctionsLSM.c **** 		data6.Data1.Data = ubyteFF;
- 269              		.loc 1 65 0
- 270 012a 4FF0FF03 		mov	r3, #255
- 271 012e 3B74     		strb	r3, [r7, #16]
-  66:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data6));
- 272              		.loc 1 66 0
- 273 0130 00BF     		nop
- 274              	.L10:
- 275              		.loc 1 66 0 is_stmt 0 discriminator 1
- 276 0132 07F11003 		add	r3, r7, #16
- 277 0136 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 278 013a C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 279 013e 1946     		mov	r1, r3
- 280 0140 FFF7FEFF 		bl	I2C001_WriteData
- 281 0144 0346     		mov	r3, r0
- 282 0146 002B     		cmp	r3, #0
- 283 0148 F3D0     		beq	.L10
-  67:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
- 284              		.loc 1 67 0 is_stmt 1
- 285 014a 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 286 014e C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 287 0152 1B68     		ldr	r3, [r3, #0]
- 288 0154 03F10102 		add	r2, r3, #1
- 289 0158 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 290 015c C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 291 0160 1A60     		str	r2, [r3, #0]
- 292 0162 47E0     		b	.L1
- 293              	.L9:
- 294              	.LBE5:
-  68:../timerFunctionsLSM.c **** 	}
-  69:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadByte)
- 295              		.loc 1 69 0
- 296 0164 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 297 0168 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 298 016c 1B68     		ldr	r3, [r3, #0]
- 299 016e 042B     		cmp	r3, #4
- 300 0170 1FD1     		bne	.L11
- 301              	.LBB6:
-  70:../timerFunctionsLSM.c **** 	{
-  71:../timerFunctionsLSM.c **** 		I2C001_DataType data7;
-  72:../timerFunctionsLSM.c **** 		data7.Data1.TDF_Type = I2C_TDF_MStop;
- 302              		.loc 1 72 0
- 303 0172 4FF00603 		mov	r3, #6
- 304 0176 7B73     		strb	r3, [r7, #13]
-  73:../timerFunctionsLSM.c **** 		data7.Data1.Data = ubyteFF;
- 305              		.loc 1 73 0
- 306 0178 4FF0FF03 		mov	r3, #255
- 307 017c 3B73     		strb	r3, [r7, #12]
-  74:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data7));
- 308              		.loc 1 74 0
- 309 017e 00BF     		nop
- 310              	.L12:
- 311              		.loc 1 74 0 is_stmt 0 discriminator 1
- 312 0180 07F10C03 		add	r3, r7, #12
- 313 0184 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 314 0188 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 315 018c 1946     		mov	r1, r3
- 316 018e FFF7FEFF 		bl	I2C001_WriteData
- 317 0192 0346     		mov	r3, r0
- 318 0194 002B     		cmp	r3, #0
- 319 0196 F3D0     		beq	.L12
-  75:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
- 320              		.loc 1 75 0 is_stmt 1
- 321 0198 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 322 019c C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 323 01a0 1B68     		ldr	r3, [r3, #0]
- 324 01a2 03F10102 		add	r2, r3, #1
- 325 01a6 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 326 01aa C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 327 01ae 1A60     		str	r2, [r3, #0]
- 328 01b0 20E0     		b	.L1
- 329              	.L11:
- 330              	.LBE6:
-  76:../timerFunctionsLSM.c **** 	}
-  77:../timerFunctionsLSM.c **** 	else if(5 == indexI2CreadByte)
- 331              		.loc 1 77 0
- 332 01b2 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 333 01b6 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 334 01ba 1B68     		ldr	r3, [r3, #0]
- 335 01bc 052B     		cmp	r3, #5
- 336 01be 19D1     		bne	.L1
-  78:../timerFunctionsLSM.c **** 	{
-  79:../timerFunctionsLSM.c **** 		while(!I2C001_ReadData(&I2C001_Handle0,&DataReceive2))
- 337              		.loc 1 79 0
- 338 01c0 00BF     		nop
- 339              	.L13:
- 340              		.loc 1 79 0 is_stmt 0 discriminator 1
- 341 01c2 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 342 01c6 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 343 01ca 40F20001 		movw	r1, #:lower16:DataReceive2
- 344 01ce C0F20001 		movt	r1, #:upper16:DataReceive2
- 345 01d2 FFF7FEFF 		bl	I2C001_ReadData
- 346 01d6 0346     		mov	r3, r0
- 347 01d8 002B     		cmp	r3, #0
- 348 01da F2D0     		beq	.L13
-  80:../timerFunctionsLSM.c **** 		{
-  81:../timerFunctionsLSM.c **** 			;
-  82:../timerFunctionsLSM.c **** 		}
-  83:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
- 349              		.loc 1 83 0 is_stmt 1
- 350 01dc 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 351 01e0 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 352 01e4 1B68     		ldr	r3, [r3, #0]
- 353 01e6 03F10102 		add	r2, r3, #1
- 354 01ea 40F20003 		movw	r3, #:lower16:indexI2CreadByte
- 355 01ee C0F20003 		movt	r3, #:upper16:indexI2CreadByte
- 356 01f2 1A60     		str	r2, [r3, #0]
- 357              	.L1:
-  84:../timerFunctionsLSM.c **** 	}
-  85:../timerFunctionsLSM.c **** }
- 358              		.loc 1 85 0
- 359 01f4 07F12007 		add	r7, r7, #32
- 360 01f8 BD46     		mov	sp, r7
- 361 01fa 80BD     		pop	{r7, pc}
- 362              		.cfi_endproc
- 363              	.LFE112:
- 365              		.section	.text.timerHandlerI2CreadBytes,"ax",%progbits
- 366              		.align	2
- 367              		.global	timerHandlerI2CreadBytes
- 368              		.thumb
- 369              		.thumb_func
- 371              	timerHandlerI2CreadBytes:
- 372              	.LFB113:
-  86:../timerFunctionsLSM.c **** 
-  87:../timerFunctionsLSM.c **** void timerHandlerI2CreadBytes(void *T)
-  88:../timerFunctionsLSM.c **** {
- 373              		.loc 1 88 0
- 374              		.cfi_startproc
- 375              		@ args = 0, pretend = 0, frame = 32
- 376              		@ frame_needed = 1, uses_anonymous_args = 0
- 377 0000 80B5     		push	{r7, lr}
- 378              	.LCFI3:
- 379              		.cfi_def_cfa_offset 8
- 380              		.cfi_offset 7, -8
- 381              		.cfi_offset 14, -4
- 382 0002 88B0     		sub	sp, sp, #32
- 383              	.LCFI4:
- 384              		.cfi_def_cfa_offset 40
- 385 0004 00AF     		add	r7, sp, #0
- 386              	.LCFI5:
- 387              		.cfi_def_cfa_register 7
- 388 0006 7860     		str	r0, [r7, #4]
- 389 0008 00E0     		b	.L28
- 390              	.L29:
-  89:../timerFunctionsLSM.c **** 	while(1){
-  90:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadBytes)
-  91:../timerFunctionsLSM.c **** 	{
-  92:../timerFunctionsLSM.c **** 		I2C001_DataType data1;
-  93:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
-  94:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_WRITE);
-  95:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
-  96:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
-  97:../timerFunctionsLSM.c **** 	}
-  98:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadBytes)
-  99:../timerFunctionsLSM.c **** 	{
- 100:../timerFunctionsLSM.c **** 		I2C001_DataType data2;
- 101:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
- 102:../timerFunctionsLSM.c **** 		data2.Data1.Data = (subAddressTimerI2CReadBytes);
- 103:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
- 104:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 105:../timerFunctionsLSM.c **** 	}
- 106:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadBytes)
- 107:../timerFunctionsLSM.c **** 	{
- 108:../timerFunctionsLSM.c **** 		I2C001_DataType data3;
- 109:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MRStart;
- 110:../timerFunctionsLSM.c **** 		data3.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_READ);
- 111:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
- 112:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 113:../timerFunctionsLSM.c **** 	}
- 114:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadBytes)
- 115:../timerFunctionsLSM.c **** 	{
- 116:../timerFunctionsLSM.c **** 		I2C001_DataType data4;
- 117:../timerFunctionsLSM.c **** 		/*for(int i = 0; i < 6; i++)
- 118:../timerFunctionsLSM.c **** 		{
- 119:../timerFunctionsLSM.c **** 			if(i !=5)
- 120:../timerFunctionsLSM.c **** 			{*/
- 121:../timerFunctionsLSM.c **** 				/*data4.Data1.TDF_Type = I2C_TDF_MRxAck0;
- 122:../timerFunctionsLSM.c **** 			}
- 123:../timerFunctionsLSM.c **** 			else
- 124:../timerFunctionsLSM.c **** 			{*/
- 125:../timerFunctionsLSM.c **** 				data4.Data1.TDF_Type = I2C_TDF_MRxAck1;
- 126:../timerFunctionsLSM.c **** 			//}
- 127:../timerFunctionsLSM.c **** 			data4.Data1.Data = ubyteFF;
- 128:../timerFunctionsLSM.c **** 			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
- 129:../timerFunctionsLSM.c **** 			{
- 130:../timerFunctionsLSM.c **** 				;
- 131:../timerFunctionsLSM.c **** 			}
- 132:../timerFunctionsLSM.c **** 
- 133:../timerFunctionsLSM.c **** 			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
- 134:../timerFunctionsLSM.c **** 			{
- 135:../timerFunctionsLSM.c **** 				;
+  37:../timerFunctionsLSM.c **** 	while(1){
+  38:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadByte)
+  39:../timerFunctionsLSM.c **** 	{
+  40:../timerFunctionsLSM.c **** 		I2C001_DataType data1;
+  41:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
+  42:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimer<<1) | I2C_WRITE);
+  43:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+  44:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+  45:../timerFunctionsLSM.c **** 	}
+  46:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadByte)
+  47:../timerFunctionsLSM.c **** 	{
+  48:../timerFunctionsLSM.c **** 		I2C001_DataType data3;
+  49:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MTxData;
+  50:../timerFunctionsLSM.c **** 		data3.Data1.Data = subAddressTimer;
+  51:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+  52:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+  53:../timerFunctionsLSM.c **** 	}
+  54:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadByte)
+  55:../timerFunctionsLSM.c **** 	{
+  56:../timerFunctionsLSM.c **** 		I2C001_DataType data5;
+  57:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MRStart;
+  58:../timerFunctionsLSM.c **** 		data5.Data1.Data = ((addressTimer<<1) | I2C_READ);
+  59:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+  60:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+  61:../timerFunctionsLSM.c **** 	}
+  62:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadByte)
+  63:../timerFunctionsLSM.c **** 	{
+  64:../timerFunctionsLSM.c **** 		I2C001_DataType data6;
+  65:../timerFunctionsLSM.c **** 		data6.Data1.TDF_Type = I2C_TDF_MRxAck1;
+  66:../timerFunctionsLSM.c **** 		data6.Data1.Data = ubyteFF;
+  67:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data6));
+  68:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+  69:../timerFunctionsLSM.c **** 	}
+  70:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadByte)
+  71:../timerFunctionsLSM.c **** 	{
+  72:../timerFunctionsLSM.c **** 		I2C001_DataType data7;
+  73:../timerFunctionsLSM.c **** 		data7.Data1.TDF_Type = I2C_TDF_MStop;
+  74:../timerFunctionsLSM.c **** 		data7.Data1.Data = ubyteFF;
+  75:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data7));
+  76:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+  77:../timerFunctionsLSM.c **** 	}
+  78:../timerFunctionsLSM.c **** 	else if(5 == indexI2CreadByte)
+  79:../timerFunctionsLSM.c **** 	{
+  80:../timerFunctionsLSM.c **** 		while(!I2C001_ReadData(&I2C001_Handle0,&DataReceive2))
+  81:../timerFunctionsLSM.c **** 		{
+  82:../timerFunctionsLSM.c **** 			;
+  83:../timerFunctionsLSM.c **** 		}
+  84:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+  85:../timerFunctionsLSM.c **** 	}
+  86:../timerFunctionsLSM.c **** 	else if(6 == indexI2CreadByte)
+  87:../timerFunctionsLSM.c **** 	{
+  88:../timerFunctionsLSM.c **** 		break;
+  89:../timerFunctionsLSM.c **** 	}
+  90:../timerFunctionsLSM.c **** }
+ 141              		.loc 1 90 0
+ 142 000a 00BF     		nop
+ 143              	.L16:
+  38:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadByte)
+ 144              		.loc 1 38 0
+ 145 000c 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 146 0010 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 147 0014 1B68     		ldr	r3, [r3, #0]
+ 148 0016 002B     		cmp	r3, #0
+ 149 0018 25D1     		bne	.L2
+ 150              	.LBB2:
+  41:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
+ 151              		.loc 1 41 0
+ 152 001a 4FF00403 		mov	r3, #4
+ 153 001e 7B77     		strb	r3, [r7, #29]
+  42:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimer<<1) | I2C_WRITE);
+ 154              		.loc 1 42 0
+ 155 0020 40F20003 		movw	r3, #:lower16:addressTimer
+ 156 0024 C0F20003 		movt	r3, #:upper16:addressTimer
+ 157 0028 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 158 002a 4FEA4303 		lsl	r3, r3, #1
+ 159 002e DBB2     		uxtb	r3, r3
+ 160 0030 3B77     		strb	r3, [r7, #28]
+  43:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 161              		.loc 1 43 0
+ 162 0032 00BF     		nop
+ 163              	.L3:
+  43:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 164              		.loc 1 43 0 is_stmt 0 discriminator 1
+ 165 0034 07F11C03 		add	r3, r7, #28
+ 166 0038 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 167 003c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 168 0040 1946     		mov	r1, r3
+ 169 0042 FFF7FEFF 		bl	I2C001_WriteData
+ 170 0046 0346     		mov	r3, r0
+ 171 0048 002B     		cmp	r3, #0
+ 172 004a F3D0     		beq	.L3
+  44:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+ 173              		.loc 1 44 0 is_stmt 1
+ 174 004c 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 175 0050 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 176 0054 1B68     		ldr	r3, [r3, #0]
+ 177 0056 03F10102 		add	r2, r3, #1
+ 178 005a 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 179 005e C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 180 0062 1A60     		str	r2, [r3, #0]
+ 181              	.LBE2:
+ 182              		.loc 1 90 0
+ 183 0064 D1E7     		b	.L17
+ 184              	.L2:
+  46:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadByte)
+ 185              		.loc 1 46 0
+ 186 0066 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 187 006a C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 188 006e 1B68     		ldr	r3, [r3, #0]
+ 189 0070 012B     		cmp	r3, #1
+ 190 0072 22D1     		bne	.L5
+ 191              	.LBB3:
+  49:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MTxData;
+ 192              		.loc 1 49 0
+ 193 0074 4FF00003 		mov	r3, #0
+ 194 0078 7B76     		strb	r3, [r7, #25]
+  50:../timerFunctionsLSM.c **** 		data3.Data1.Data = subAddressTimer;
+ 195              		.loc 1 50 0
+ 196 007a 40F20003 		movw	r3, #:lower16:subAddressTimer
+ 197 007e C0F20003 		movt	r3, #:upper16:subAddressTimer
+ 198 0082 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 199 0084 3B76     		strb	r3, [r7, #24]
+  51:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 200              		.loc 1 51 0
+ 201 0086 00BF     		nop
+ 202              	.L6:
+  51:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 203              		.loc 1 51 0 is_stmt 0 discriminator 1
+ 204 0088 07F11803 		add	r3, r7, #24
+ 205 008c 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 206 0090 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 207 0094 1946     		mov	r1, r3
+ 208 0096 FFF7FEFF 		bl	I2C001_WriteData
+ 209 009a 0346     		mov	r3, r0
+ 210 009c 002B     		cmp	r3, #0
+ 211 009e F3D0     		beq	.L6
+  52:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+ 212              		.loc 1 52 0 is_stmt 1
+ 213 00a0 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 214 00a4 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 215 00a8 1B68     		ldr	r3, [r3, #0]
+ 216 00aa 03F10102 		add	r2, r3, #1
+ 217 00ae 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 218 00b2 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 219 00b6 1A60     		str	r2, [r3, #0]
+ 220              	.LBE3:
+ 221              		.loc 1 90 0
+ 222 00b8 A7E7     		b	.L17
+ 223              	.L5:
+  54:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadByte)
+ 224              		.loc 1 54 0
+ 225 00ba 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 226 00be C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 227 00c2 1B68     		ldr	r3, [r3, #0]
+ 228 00c4 022B     		cmp	r3, #2
+ 229 00c6 28D1     		bne	.L7
+ 230              	.LBB4:
+  57:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MRStart;
+ 231              		.loc 1 57 0
+ 232 00c8 4FF00503 		mov	r3, #5
+ 233 00cc 7B75     		strb	r3, [r7, #21]
+  58:../timerFunctionsLSM.c **** 		data5.Data1.Data = ((addressTimer<<1) | I2C_READ);
+ 234              		.loc 1 58 0
+ 235 00ce 40F20003 		movw	r3, #:lower16:addressTimer
+ 236 00d2 C0F20003 		movt	r3, #:upper16:addressTimer
+ 237 00d6 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 238 00d8 4FEA4303 		lsl	r3, r3, #1
+ 239 00dc DBB2     		uxtb	r3, r3
+ 240 00de 43F00103 		orr	r3, r3, #1
+ 241 00e2 DBB2     		uxtb	r3, r3
+ 242 00e4 3B75     		strb	r3, [r7, #20]
+  59:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+ 243              		.loc 1 59 0
+ 244 00e6 00BF     		nop
+ 245              	.L8:
+  59:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+ 246              		.loc 1 59 0 is_stmt 0 discriminator 1
+ 247 00e8 07F11403 		add	r3, r7, #20
+ 248 00ec 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 249 00f0 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 250 00f4 1946     		mov	r1, r3
+ 251 00f6 FFF7FEFF 		bl	I2C001_WriteData
+ 252 00fa 0346     		mov	r3, r0
+ 253 00fc 002B     		cmp	r3, #0
+ 254 00fe F3D0     		beq	.L8
+  60:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+ 255              		.loc 1 60 0 is_stmt 1
+ 256 0100 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 257 0104 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 258 0108 1B68     		ldr	r3, [r3, #0]
+ 259 010a 03F10102 		add	r2, r3, #1
+ 260 010e 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 261 0112 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 262 0116 1A60     		str	r2, [r3, #0]
+ 263              	.LBE4:
+ 264              		.loc 1 90 0
+ 265 0118 77E7     		b	.L17
+ 266              	.L7:
+  62:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadByte)
+ 267              		.loc 1 62 0
+ 268 011a 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 269 011e C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 270 0122 1B68     		ldr	r3, [r3, #0]
+ 271 0124 032B     		cmp	r3, #3
+ 272 0126 1FD1     		bne	.L9
+ 273              	.LBB5:
+  65:../timerFunctionsLSM.c **** 		data6.Data1.TDF_Type = I2C_TDF_MRxAck1;
+ 274              		.loc 1 65 0
+ 275 0128 4FF00303 		mov	r3, #3
+ 276 012c 7B74     		strb	r3, [r7, #17]
+  66:../timerFunctionsLSM.c **** 		data6.Data1.Data = ubyteFF;
+ 277              		.loc 1 66 0
+ 278 012e 4FF0FF03 		mov	r3, #255
+ 279 0132 3B74     		strb	r3, [r7, #16]
+  67:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data6));
+ 280              		.loc 1 67 0
+ 281 0134 00BF     		nop
+ 282              	.L10:
+  67:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data6));
+ 283              		.loc 1 67 0 is_stmt 0 discriminator 1
+ 284 0136 07F11003 		add	r3, r7, #16
+ 285 013a 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 286 013e C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 287 0142 1946     		mov	r1, r3
+ 288 0144 FFF7FEFF 		bl	I2C001_WriteData
+ 289 0148 0346     		mov	r3, r0
+ 290 014a 002B     		cmp	r3, #0
+ 291 014c F3D0     		beq	.L10
+  68:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+ 292              		.loc 1 68 0 is_stmt 1
+ 293 014e 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 294 0152 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 295 0156 1B68     		ldr	r3, [r3, #0]
+ 296 0158 03F10102 		add	r2, r3, #1
+ 297 015c 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 298 0160 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 299 0164 1A60     		str	r2, [r3, #0]
+ 300              	.LBE5:
+ 301              		.loc 1 90 0
+ 302 0166 50E7     		b	.L17
+ 303              	.L9:
+  70:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadByte)
+ 304              		.loc 1 70 0
+ 305 0168 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 306 016c C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 307 0170 1B68     		ldr	r3, [r3, #0]
+ 308 0172 042B     		cmp	r3, #4
+ 309 0174 1FD1     		bne	.L11
+ 310              	.LBB6:
+  73:../timerFunctionsLSM.c **** 		data7.Data1.TDF_Type = I2C_TDF_MStop;
+ 311              		.loc 1 73 0
+ 312 0176 4FF00603 		mov	r3, #6
+ 313 017a 7B73     		strb	r3, [r7, #13]
+  74:../timerFunctionsLSM.c **** 		data7.Data1.Data = ubyteFF;
+ 314              		.loc 1 74 0
+ 315 017c 4FF0FF03 		mov	r3, #255
+ 316 0180 3B73     		strb	r3, [r7, #12]
+  75:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data7));
+ 317              		.loc 1 75 0
+ 318 0182 00BF     		nop
+ 319              	.L12:
+  75:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data7));
+ 320              		.loc 1 75 0 is_stmt 0 discriminator 1
+ 321 0184 07F10C03 		add	r3, r7, #12
+ 322 0188 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 323 018c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 324 0190 1946     		mov	r1, r3
+ 325 0192 FFF7FEFF 		bl	I2C001_WriteData
+ 326 0196 0346     		mov	r3, r0
+ 327 0198 002B     		cmp	r3, #0
+ 328 019a F3D0     		beq	.L12
+  76:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+ 329              		.loc 1 76 0 is_stmt 1
+ 330 019c 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 331 01a0 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 332 01a4 1B68     		ldr	r3, [r3, #0]
+ 333 01a6 03F10102 		add	r2, r3, #1
+ 334 01aa 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 335 01ae C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 336 01b2 1A60     		str	r2, [r3, #0]
+ 337              	.LBE6:
+ 338              		.loc 1 90 0
+ 339 01b4 29E7     		b	.L17
+ 340              	.L11:
+  78:../timerFunctionsLSM.c **** 	else if(5 == indexI2CreadByte)
+ 341              		.loc 1 78 0
+ 342 01b6 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 343 01ba C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 344 01be 1B68     		ldr	r3, [r3, #0]
+ 345 01c0 052B     		cmp	r3, #5
+ 346 01c2 1AD1     		bne	.L13
+  80:../timerFunctionsLSM.c **** 		while(!I2C001_ReadData(&I2C001_Handle0,&DataReceive2))
+ 347              		.loc 1 80 0
+ 348 01c4 00BF     		nop
+ 349              	.L14:
+  80:../timerFunctionsLSM.c **** 		while(!I2C001_ReadData(&I2C001_Handle0,&DataReceive2))
+ 350              		.loc 1 80 0 is_stmt 0 discriminator 1
+ 351 01c6 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 352 01ca C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 353 01ce 40F20001 		movw	r1, #:lower16:DataReceive2
+ 354 01d2 C0F20001 		movt	r1, #:upper16:DataReceive2
+ 355 01d6 FFF7FEFF 		bl	I2C001_ReadData
+ 356 01da 0346     		mov	r3, r0
+ 357 01dc 002B     		cmp	r3, #0
+ 358 01de F2D0     		beq	.L14
+  84:../timerFunctionsLSM.c **** 		indexI2CreadByte++;
+ 359              		.loc 1 84 0 is_stmt 1
+ 360 01e0 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 361 01e4 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 362 01e8 1B68     		ldr	r3, [r3, #0]
+ 363 01ea 03F10102 		add	r2, r3, #1
+ 364 01ee 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 365 01f2 C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 366 01f6 1A60     		str	r2, [r3, #0]
+ 367              		.loc 1 90 0
+ 368 01f8 07E7     		b	.L17
+ 369              	.L13:
+  86:../timerFunctionsLSM.c **** 	else if(6 == indexI2CreadByte)
+ 370              		.loc 1 86 0
+ 371 01fa 40F20003 		movw	r3, #:lower16:indexI2CreadByte
+ 372 01fe C0F20003 		movt	r3, #:upper16:indexI2CreadByte
+ 373 0202 1B68     		ldr	r3, [r3, #0]
+ 374 0204 062B     		cmp	r3, #6
+ 375 0206 7FF400AF 		bne	.L17
+  88:../timerFunctionsLSM.c **** 		break;
+ 376              		.loc 1 88 0
+ 377 020a 00BF     		nop
+  91:../timerFunctionsLSM.c **** }
+ 378              		.loc 1 91 0
+ 379 020c 07F12007 		add	r7, r7, #32
+ 380 0210 BD46     		mov	sp, r7
+ 381 0212 80BD     		pop	{r7, pc}
+ 382              		.cfi_endproc
+ 383              	.LFE112:
+ 385              		.section	.text.delay,"ax",%progbits
+ 386              		.align	2
+ 387              		.global	delay
+ 388              		.thumb
+ 389              		.thumb_func
+ 391              	delay:
+ 392              	.LFB113:
+  92:../timerFunctionsLSM.c **** 
+  93:../timerFunctionsLSM.c **** void delay(void)
+  94:../timerFunctionsLSM.c **** {
+ 393              		.loc 1 94 0
+ 394              		.cfi_startproc
+ 395              		@ args = 0, pretend = 0, frame = 8
+ 396              		@ frame_needed = 1, uses_anonymous_args = 0
+ 397              		@ link register save eliminated.
+ 398 0000 80B4     		push	{r7}
+ 399              	.LCFI3:
+ 400              		.cfi_def_cfa_offset 4
+ 401              		.cfi_offset 7, -4
+ 402 0002 83B0     		sub	sp, sp, #12
+ 403              	.LCFI4:
+ 404              		.cfi_def_cfa_offset 16
+ 405 0004 00AF     		add	r7, sp, #0
+ 406              	.LCFI5:
+ 407              		.cfi_def_cfa_register 7
+ 408              	.LBB7:
+  95:../timerFunctionsLSM.c **** 	for(int e = 0; e < 400; e++);
+ 409              		.loc 1 95 0
+ 410 0006 4FF00003 		mov	r3, #0
+ 411 000a 7B60     		str	r3, [r7, #4]
+ 412 000c 03E0     		b	.L19
+ 413              	.L20:
+ 414              		.loc 1 95 0 is_stmt 0 discriminator 2
+ 415 000e 7B68     		ldr	r3, [r7, #4]
+ 416 0010 03F10103 		add	r3, r3, #1
+ 417 0014 7B60     		str	r3, [r7, #4]
+ 418              	.L19:
+ 419              		.loc 1 95 0 discriminator 1
+ 420 0016 7A68     		ldr	r2, [r7, #4]
+ 421 0018 40F28F13 		movw	r3, #399
+ 422 001c 9A42     		cmp	r2, r3
+ 423 001e F6DD     		ble	.L20
+ 424              	.LBE7:
+  96:../timerFunctionsLSM.c **** }
+ 425              		.loc 1 96 0 is_stmt 1
+ 426 0020 07F10C07 		add	r7, r7, #12
+ 427 0024 BD46     		mov	sp, r7
+ 428 0026 80BC     		pop	{r7}
+ 429 0028 7047     		bx	lr
+ 430              		.cfi_endproc
+ 431              	.LFE113:
+ 433 002a 00BF     		.section	.text.timerHandlerI2CreadBytes,"ax",%progbits
+ 434              		.align	2
+ 435              		.global	timerHandlerI2CreadBytes
+ 436              		.thumb
+ 437              		.thumb_func
+ 439              	timerHandlerI2CreadBytes:
+ 440              	.LFB114:
+  97:../timerFunctionsLSM.c **** 
+  98:../timerFunctionsLSM.c **** void timerHandlerI2CreadBytes(void *T)
+  99:../timerFunctionsLSM.c **** {
+ 441              		.loc 1 99 0
+ 442              		.cfi_startproc
+ 443              		@ args = 0, pretend = 0, frame = 32
+ 444              		@ frame_needed = 1, uses_anonymous_args = 0
+ 445 0000 80B5     		push	{r7, lr}
+ 446              	.LCFI6:
+ 447              		.cfi_def_cfa_offset 8
+ 448              		.cfi_offset 7, -8
+ 449              		.cfi_offset 14, -4
+ 450 0002 88B0     		sub	sp, sp, #32
+ 451              	.LCFI7:
+ 452              		.cfi_def_cfa_offset 40
+ 453 0004 00AF     		add	r7, sp, #0
+ 454              	.LCFI8:
+ 455              		.cfi_def_cfa_register 7
+ 456 0006 7860     		str	r0, [r7, #4]
+ 457 0008 00E0     		b	.L35
+ 458              	.L36:
+ 100:../timerFunctionsLSM.c **** 	while(1){
+ 101:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadBytes)
+ 102:../timerFunctionsLSM.c **** 	{
+ 103:../timerFunctionsLSM.c **** 		I2C001_DataType data1;
+ 104:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
+ 105:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_WRITE);
+ 106:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 107:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 108:../timerFunctionsLSM.c **** 		delay();
+ 109:../timerFunctionsLSM.c **** 	}
+ 110:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadBytes)
+ 111:../timerFunctionsLSM.c **** 	{
+ 112:../timerFunctionsLSM.c **** 		I2C001_DataType data2;
+ 113:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
+ 114:../timerFunctionsLSM.c **** 		data2.Data1.Data = (subAddressTimerI2CReadBytes);
+ 115:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+ 116:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 117:../timerFunctionsLSM.c **** 		delay();
+ 118:../timerFunctionsLSM.c **** 	}
+ 119:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadBytes)
+ 120:../timerFunctionsLSM.c **** 	{
+ 121:../timerFunctionsLSM.c **** 		I2C001_DataType data3;
+ 122:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MRStart;
+ 123:../timerFunctionsLSM.c **** 		data3.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_READ);
+ 124:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 125:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 126:../timerFunctionsLSM.c **** 		delay();
+ 127:../timerFunctionsLSM.c **** 	}
+ 128:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadBytes)
+ 129:../timerFunctionsLSM.c **** 	{
+ 130:../timerFunctionsLSM.c **** 		I2C001_DataType data4;
+ 131:../timerFunctionsLSM.c **** 		/*for(int i = 0; i < 6; i++)
+ 132:../timerFunctionsLSM.c **** 		{
+ 133:../timerFunctionsLSM.c **** 			if(i !=5)
+ 134:../timerFunctionsLSM.c **** 			{*/
+ 135:../timerFunctionsLSM.c **** 				/*data4.Data1.TDF_Type = I2C_TDF_MRxAck0;
  136:../timerFunctionsLSM.c **** 			}
- 137:../timerFunctionsLSM.c **** 		//}
- 138:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 139:../timerFunctionsLSM.c **** 	}
- 140:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadBytes)
- 141:../timerFunctionsLSM.c **** 	{
- 142:../timerFunctionsLSM.c **** 		I2C001_DataType data5;
- 143:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MStop;
- 144:../timerFunctionsLSM.c **** 		data5.Data1.Data = ubyteFF;
- 145:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
- 146:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 147:../timerFunctionsLSM.c **** 	}
- 148:../timerFunctionsLSM.c **** 	else if(indexI2CreadBytes == 5)
- 149:../timerFunctionsLSM.c **** 	{
- 150:../timerFunctionsLSM.c **** 		break;
- 151:../timerFunctionsLSM.c **** 	}
- 152:../timerFunctionsLSM.c **** 	}
- 391              		.loc 1 152 0
- 392 000a 00BF     		nop
- 393              	.L28:
-  90:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadBytes)
- 394              		.loc 1 90 0
- 395 000c 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 396 0010 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 397 0014 1B68     		ldr	r3, [r3, #0]
- 398 0016 002B     		cmp	r3, #0
- 399 0018 25D1     		bne	.L15
- 400              	.LBB7:
-  93:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
- 401              		.loc 1 93 0
- 402 001a 4FF00403 		mov	r3, #4
- 403 001e 7B77     		strb	r3, [r7, #29]
-  94:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_WRITE);
- 404              		.loc 1 94 0
- 405 0020 40F20003 		movw	r3, #:lower16:addressTimerI2CReadBytes
- 406 0024 C0F20003 		movt	r3, #:upper16:addressTimerI2CReadBytes
- 407 0028 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 408 002a 4FEA4303 		lsl	r3, r3, #1
- 409 002e DBB2     		uxtb	r3, r3
- 410 0030 3B77     		strb	r3, [r7, #28]
-  95:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
- 411              		.loc 1 95 0
- 412 0032 00BF     		nop
- 413              	.L16:
-  95:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
- 414              		.loc 1 95 0 is_stmt 0 discriminator 1
- 415 0034 07F11C03 		add	r3, r7, #28
- 416 0038 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 417 003c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 418 0040 1946     		mov	r1, r3
- 419 0042 FFF7FEFF 		bl	I2C001_WriteData
- 420 0046 0346     		mov	r3, r0
- 421 0048 002B     		cmp	r3, #0
- 422 004a F3D0     		beq	.L16
-  96:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 423              		.loc 1 96 0 is_stmt 1
- 424 004c 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 425 0050 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 426 0054 1B68     		ldr	r3, [r3, #0]
- 427 0056 03F10102 		add	r2, r3, #1
- 428 005a 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 429 005e C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 430 0062 1A60     		str	r2, [r3, #0]
- 431              	.LBE7:
- 432              		.loc 1 152 0
- 433 0064 D1E7     		b	.L29
- 434              	.L15:
-  98:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadBytes)
- 435              		.loc 1 98 0
- 436 0066 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 437 006a C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 438 006e 1B68     		ldr	r3, [r3, #0]
- 439 0070 012B     		cmp	r3, #1
- 440 0072 22D1     		bne	.L18
- 441              	.LBB8:
- 101:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
- 442              		.loc 1 101 0
- 443 0074 4FF00003 		mov	r3, #0
- 444 0078 7B76     		strb	r3, [r7, #25]
- 102:../timerFunctionsLSM.c **** 		data2.Data1.Data = (subAddressTimerI2CReadBytes);
- 445              		.loc 1 102 0
- 446 007a 40F20003 		movw	r3, #:lower16:subAddressTimerI2CReadBytes
- 447 007e C0F20003 		movt	r3, #:upper16:subAddressTimerI2CReadBytes
- 448 0082 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 449 0084 3B76     		strb	r3, [r7, #24]
- 103:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
- 450              		.loc 1 103 0
- 451 0086 00BF     		nop
- 452              	.L19:
- 103:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
- 453              		.loc 1 103 0 is_stmt 0 discriminator 1
- 454 0088 07F11803 		add	r3, r7, #24
- 455 008c 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 456 0090 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 457 0094 1946     		mov	r1, r3
- 458 0096 FFF7FEFF 		bl	I2C001_WriteData
- 459 009a 0346     		mov	r3, r0
- 460 009c 002B     		cmp	r3, #0
- 461 009e F3D0     		beq	.L19
- 104:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 462              		.loc 1 104 0 is_stmt 1
- 463 00a0 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 464 00a4 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 465 00a8 1B68     		ldr	r3, [r3, #0]
- 466 00aa 03F10102 		add	r2, r3, #1
- 467 00ae 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 468 00b2 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 469 00b6 1A60     		str	r2, [r3, #0]
- 470              	.LBE8:
- 471              		.loc 1 152 0
- 472 00b8 A7E7     		b	.L29
- 473              	.L18:
- 106:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadBytes)
- 474              		.loc 1 106 0
- 475 00ba 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 476 00be C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 477 00c2 1B68     		ldr	r3, [r3, #0]
- 478 00c4 022B     		cmp	r3, #2
- 479 00c6 28D1     		bne	.L20
- 480              	.LBB9:
- 109:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MRStart;
- 481              		.loc 1 109 0
- 482 00c8 4FF00503 		mov	r3, #5
- 483 00cc 7B75     		strb	r3, [r7, #21]
- 110:../timerFunctionsLSM.c **** 		data3.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_READ);
- 484              		.loc 1 110 0
- 485 00ce 40F20003 		movw	r3, #:lower16:addressTimerI2CReadBytes
- 486 00d2 C0F20003 		movt	r3, #:upper16:addressTimerI2CReadBytes
- 487 00d6 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 488 00d8 4FEA4303 		lsl	r3, r3, #1
- 489 00dc DBB2     		uxtb	r3, r3
- 490 00de 43F00103 		orr	r3, r3, #1
- 491 00e2 DBB2     		uxtb	r3, r3
- 492 00e4 3B75     		strb	r3, [r7, #20]
- 111:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
- 493              		.loc 1 111 0
- 494 00e6 00BF     		nop
- 495              	.L21:
- 111:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
- 496              		.loc 1 111 0 is_stmt 0 discriminator 1
- 497 00e8 07F11403 		add	r3, r7, #20
- 498 00ec 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 499 00f0 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 500 00f4 1946     		mov	r1, r3
- 501 00f6 FFF7FEFF 		bl	I2C001_WriteData
- 502 00fa 0346     		mov	r3, r0
- 503 00fc 002B     		cmp	r3, #0
- 504 00fe F3D0     		beq	.L21
- 112:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 505              		.loc 1 112 0 is_stmt 1
- 506 0100 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 507 0104 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 508 0108 1B68     		ldr	r3, [r3, #0]
- 509 010a 03F10102 		add	r2, r3, #1
- 510 010e 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 511 0112 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 512 0116 1A60     		str	r2, [r3, #0]
- 513              	.LBE9:
- 514              		.loc 1 152 0
- 515 0118 77E7     		b	.L29
- 516              	.L20:
- 114:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadBytes)
- 517              		.loc 1 114 0
- 518 011a 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 519 011e C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 520 0122 1B68     		ldr	r3, [r3, #0]
- 521 0124 032B     		cmp	r3, #3
- 522 0126 36D1     		bne	.L22
- 523              	.LBB10:
- 125:../timerFunctionsLSM.c **** 				data4.Data1.TDF_Type = I2C_TDF_MRxAck1;
- 524              		.loc 1 125 0
- 525 0128 4FF00303 		mov	r3, #3
- 526 012c 7B74     		strb	r3, [r7, #17]
- 127:../timerFunctionsLSM.c **** 			data4.Data1.Data = ubyteFF;
- 527              		.loc 1 127 0
- 528 012e 4FF0FF03 		mov	r3, #255
- 529 0132 3B74     		strb	r3, [r7, #16]
- 128:../timerFunctionsLSM.c **** 			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
- 530              		.loc 1 128 0
- 531 0134 00BF     		nop
- 532              	.L23:
- 128:../timerFunctionsLSM.c **** 			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
- 533              		.loc 1 128 0 is_stmt 0 discriminator 1
- 534 0136 07F11003 		add	r3, r7, #16
- 535 013a 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 536 013e C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 537 0142 1946     		mov	r1, r3
- 538 0144 FFF7FEFF 		bl	I2C001_WriteData
- 539 0148 0346     		mov	r3, r0
- 540 014a 002B     		cmp	r3, #0
- 541 014c F3D0     		beq	.L23
- 133:../timerFunctionsLSM.c **** 			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
- 542              		.loc 1 133 0 is_stmt 1
- 543 014e 00BF     		nop
- 544              	.L24:
- 133:../timerFunctionsLSM.c **** 			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
- 545              		.loc 1 133 0 is_stmt 0 discriminator 1
- 546 0150 40F20003 		movw	r3, #:lower16:indexAccel
- 547 0154 C0F20003 		movt	r3, #:upper16:indexAccel
- 548 0158 1B68     		ldr	r3, [r3, #0]
- 549 015a 4FEA4302 		lsl	r2, r3, #1
- 550 015e 40F20003 		movw	r3, #:lower16:accelerationXYZ
- 551 0162 C0F20003 		movt	r3, #:upper16:accelerationXYZ
- 552 0166 D318     		adds	r3, r2, r3
- 553 0168 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 554 016c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 555 0170 1946     		mov	r1, r3
- 556 0172 FFF7FEFF 		bl	I2C001_ReadData
- 557 0176 0346     		mov	r3, r0
- 558 0178 002B     		cmp	r3, #0
- 559 017a E9D0     		beq	.L24
- 138:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 560              		.loc 1 138 0 is_stmt 1
- 561 017c 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 562 0180 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 563 0184 1B68     		ldr	r3, [r3, #0]
- 564 0186 03F10102 		add	r2, r3, #1
- 565 018a 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 566 018e C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 567 0192 1A60     		str	r2, [r3, #0]
- 568              	.LBE10:
- 569              		.loc 1 152 0
- 570 0194 39E7     		b	.L29
- 571              	.L22:
- 140:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadBytes)
- 572              		.loc 1 140 0
- 573 0196 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 574 019a C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 575 019e 1B68     		ldr	r3, [r3, #0]
- 576 01a0 042B     		cmp	r3, #4
- 577 01a2 1FD1     		bne	.L25
- 578              	.LBB11:
- 143:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MStop;
- 579              		.loc 1 143 0
- 580 01a4 4FF00603 		mov	r3, #6
- 581 01a8 7B73     		strb	r3, [r7, #13]
- 144:../timerFunctionsLSM.c **** 		data5.Data1.Data = ubyteFF;
- 582              		.loc 1 144 0
- 583 01aa 4FF0FF03 		mov	r3, #255
- 584 01ae 3B73     		strb	r3, [r7, #12]
- 145:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
- 585              		.loc 1 145 0
- 586 01b0 00BF     		nop
- 587              	.L26:
- 145:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
- 588              		.loc 1 145 0 is_stmt 0 discriminator 1
- 589 01b2 07F10C03 		add	r3, r7, #12
- 590 01b6 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 591 01ba C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 592 01be 1946     		mov	r1, r3
- 593 01c0 FFF7FEFF 		bl	I2C001_WriteData
- 594 01c4 0346     		mov	r3, r0
- 595 01c6 002B     		cmp	r3, #0
- 596 01c8 F3D0     		beq	.L26
- 146:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
- 597              		.loc 1 146 0 is_stmt 1
- 598 01ca 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 599 01ce C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 600 01d2 1B68     		ldr	r3, [r3, #0]
- 601 01d4 03F10102 		add	r2, r3, #1
- 602 01d8 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 603 01dc C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 604 01e0 1A60     		str	r2, [r3, #0]
- 605              	.LBE11:
- 606              		.loc 1 152 0
- 607 01e2 12E7     		b	.L29
- 608              	.L25:
- 148:../timerFunctionsLSM.c **** 	else if(indexI2CreadBytes == 5)
- 609              		.loc 1 148 0
- 610 01e4 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
- 611 01e8 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
- 612 01ec 1B68     		ldr	r3, [r3, #0]
- 613 01ee 052B     		cmp	r3, #5
- 614 01f0 7FF40BAF 		bne	.L29
- 150:../timerFunctionsLSM.c **** 		break;
- 615              		.loc 1 150 0
- 616 01f4 00BF     		nop
- 153:../timerFunctionsLSM.c **** }
- 617              		.loc 1 153 0
- 618 01f6 07F12007 		add	r7, r7, #32
- 619 01fa BD46     		mov	sp, r7
- 620 01fc 80BD     		pop	{r7, pc}
- 621              		.cfi_endproc
- 622              	.LFE113:
- 624 01fe 00BF     		.section	.text.timerHandlerI2CwriteByte,"ax",%progbits
- 625              		.align	2
- 626              		.global	timerHandlerI2CwriteByte
- 627              		.thumb
- 628              		.thumb_func
- 630              	timerHandlerI2CwriteByte:
- 631              	.LFB114:
- 154:../timerFunctionsLSM.c **** 
- 155:../timerFunctionsLSM.c **** 
- 156:../timerFunctionsLSM.c **** void timerHandlerI2CwriteByte(void *T)
- 157:../timerFunctionsLSM.c **** {
- 632              		.loc 1 157 0
- 633              		.cfi_startproc
- 634              		@ args = 0, pretend = 0, frame = 24
- 635              		@ frame_needed = 1, uses_anonymous_args = 0
- 636 0000 80B5     		push	{r7, lr}
- 637              	.LCFI6:
- 638              		.cfi_def_cfa_offset 8
- 639              		.cfi_offset 7, -8
- 640              		.cfi_offset 14, -4
- 641 0002 86B0     		sub	sp, sp, #24
- 642              	.LCFI7:
- 643              		.cfi_def_cfa_offset 32
- 644 0004 00AF     		add	r7, sp, #0
- 645              	.LCFI8:
- 646              		.cfi_def_cfa_register 7
- 647 0006 7860     		str	r0, [r7, #4]
- 158:../timerFunctionsLSM.c **** 	if(0 == indexI2CwriteByte)
- 648              		.loc 1 158 0
- 649 0008 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 650 000c C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 651 0010 1B68     		ldr	r3, [r3, #0]
- 652 0012 002B     		cmp	r3, #0
- 653 0014 25D1     		bne	.L31
- 654              	.LBB12:
- 159:../timerFunctionsLSM.c **** 	{
- 160:../timerFunctionsLSM.c **** 		I2C001_DataType data1;
- 161:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
- 655              		.loc 1 161 0
- 656 0016 4FF00403 		mov	r3, #4
- 657 001a 7B75     		strb	r3, [r7, #21]
- 162:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerWrite<<1) | I2C_WRITE);
- 658              		.loc 1 162 0
- 659 001c 40F20003 		movw	r3, #:lower16:addressTimerWrite
- 660 0020 C0F20003 		movt	r3, #:upper16:addressTimerWrite
- 661 0024 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 662 0026 4FEA4303 		lsl	r3, r3, #1
- 663 002a DBB2     		uxtb	r3, r3
- 664 002c 3B75     		strb	r3, [r7, #20]
- 163:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
- 665              		.loc 1 163 0
- 666 002e 00BF     		nop
- 667              	.L32:
- 668              		.loc 1 163 0 is_stmt 0 discriminator 1
- 669 0030 07F11403 		add	r3, r7, #20
- 670 0034 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 671 0038 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 672 003c 1946     		mov	r1, r3
- 673 003e FFF7FEFF 		bl	I2C001_WriteData
- 674 0042 0346     		mov	r3, r0
- 675 0044 002B     		cmp	r3, #0
- 676 0046 F3D0     		beq	.L32
- 164:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
- 677              		.loc 1 164 0 is_stmt 1
- 678 0048 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 679 004c C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 680 0050 1B68     		ldr	r3, [r3, #0]
- 681 0052 03F10102 		add	r2, r3, #1
- 682 0056 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 683 005a C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 684 005e 1A60     		str	r2, [r3, #0]
- 685 0060 79E0     		b	.L30
- 686              	.L31:
- 687              	.LBE12:
- 165:../timerFunctionsLSM.c **** 	}
- 166:../timerFunctionsLSM.c **** 	else if(1 == indexI2CwriteByte)
- 688              		.loc 1 166 0
- 689 0062 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 690 0066 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 691 006a 1B68     		ldr	r3, [r3, #0]
- 692 006c 012B     		cmp	r3, #1
- 693 006e 22D1     		bne	.L34
- 694              	.LBB13:
- 167:../timerFunctionsLSM.c **** 	{
- 168:../timerFunctionsLSM.c **** 		I2C001_DataType data2;
- 169:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
- 695              		.loc 1 169 0
- 696 0070 4FF00003 		mov	r3, #0
- 697 0074 7B74     		strb	r3, [r7, #17]
- 170:../timerFunctionsLSM.c **** 		data2.Data1.Data = subAddressTimerWrite;
- 698              		.loc 1 170 0
- 699 0076 40F20003 		movw	r3, #:lower16:subAddressTimerWrite
- 700 007a C0F20003 		movt	r3, #:upper16:subAddressTimerWrite
- 701 007e 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 702 0080 3B74     		strb	r3, [r7, #16]
- 171:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
- 703              		.loc 1 171 0
- 704 0082 00BF     		nop
- 705              	.L35:
- 706              		.loc 1 171 0 is_stmt 0 discriminator 1
- 707 0084 07F11003 		add	r3, r7, #16
- 708 0088 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 709 008c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 710 0090 1946     		mov	r1, r3
- 711 0092 FFF7FEFF 		bl	I2C001_WriteData
- 712 0096 0346     		mov	r3, r0
- 713 0098 002B     		cmp	r3, #0
- 714 009a F3D0     		beq	.L35
- 172:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
- 715              		.loc 1 172 0 is_stmt 1
- 716 009c 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 717 00a0 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 718 00a4 1B68     		ldr	r3, [r3, #0]
- 719 00a6 03F10102 		add	r2, r3, #1
- 720 00aa 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 721 00ae C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 722 00b2 1A60     		str	r2, [r3, #0]
- 723 00b4 4FE0     		b	.L30
- 724              	.L34:
- 725              	.LBE13:
- 173:../timerFunctionsLSM.c **** 	}
- 174:../timerFunctionsLSM.c **** 	else if(2 == indexI2CwriteByte)
- 726              		.loc 1 174 0
- 727 00b6 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 728 00ba C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 729 00be 1B68     		ldr	r3, [r3, #0]
- 730 00c0 022B     		cmp	r3, #2
- 731 00c2 22D1     		bne	.L36
- 732              	.LBB14:
- 175:../timerFunctionsLSM.c **** 	{
- 176:../timerFunctionsLSM.c **** 		I2C001_DataType data3;
- 177:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MTxData;
- 733              		.loc 1 177 0
- 734 00c4 4FF00003 		mov	r3, #0
- 735 00c8 7B73     		strb	r3, [r7, #13]
- 178:../timerFunctionsLSM.c **** 		data3.Data1.Data = dataWrite;
- 736              		.loc 1 178 0
- 737 00ca 40F20003 		movw	r3, #:lower16:dataWrite
- 738 00ce C0F20003 		movt	r3, #:upper16:dataWrite
- 739 00d2 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
- 740 00d4 3B73     		strb	r3, [r7, #12]
- 179:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
- 741              		.loc 1 179 0
- 742 00d6 00BF     		nop
- 743              	.L37:
- 744              		.loc 1 179 0 is_stmt 0 discriminator 1
- 745 00d8 07F10C03 		add	r3, r7, #12
- 746 00dc 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 747 00e0 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 748 00e4 1946     		mov	r1, r3
- 749 00e6 FFF7FEFF 		bl	I2C001_WriteData
- 750 00ea 0346     		mov	r3, r0
- 751 00ec 002B     		cmp	r3, #0
- 752 00ee F3D0     		beq	.L37
- 180:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
- 753              		.loc 1 180 0 is_stmt 1
- 754 00f0 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 755 00f4 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 756 00f8 1B68     		ldr	r3, [r3, #0]
- 757 00fa 03F10102 		add	r2, r3, #1
- 758 00fe 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 759 0102 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 760 0106 1A60     		str	r2, [r3, #0]
- 761 0108 25E0     		b	.L30
- 762              	.L36:
- 763              	.LBE14:
- 181:../timerFunctionsLSM.c **** 	}
- 182:../timerFunctionsLSM.c **** 	else if(3 == indexI2CwriteByte)
- 764              		.loc 1 182 0
- 765 010a 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 766 010e C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 767 0112 1B68     		ldr	r3, [r3, #0]
- 768 0114 032B     		cmp	r3, #3
- 769 0116 1ED1     		bne	.L30
- 770              	.LBB15:
- 183:../timerFunctionsLSM.c **** 	{
- 184:../timerFunctionsLSM.c **** 		I2C001_DataType data4;
- 185:../timerFunctionsLSM.c **** 		data4.Data1.TDF_Type = I2C_TDF_MStop;
- 771              		.loc 1 185 0
- 772 0118 4FF00603 		mov	r3, #6
- 773 011c 7B72     		strb	r3, [r7, #9]
- 186:../timerFunctionsLSM.c **** 		data4.Data1.Data = ubyteFF;
- 774              		.loc 1 186 0
- 775 011e 4FF0FF03 		mov	r3, #255
- 776 0122 3B72     		strb	r3, [r7, #8]
- 187:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data4));
- 777              		.loc 1 187 0
- 778 0124 00BF     		nop
- 779              	.L38:
- 780              		.loc 1 187 0 is_stmt 0 discriminator 1
- 781 0126 07F10803 		add	r3, r7, #8
- 782 012a 40F20000 		movw	r0, #:lower16:I2C001_Handle0
- 783 012e C0F20000 		movt	r0, #:upper16:I2C001_Handle0
- 784 0132 1946     		mov	r1, r3
- 785 0134 FFF7FEFF 		bl	I2C001_WriteData
- 786 0138 0346     		mov	r3, r0
- 787 013a 002B     		cmp	r3, #0
- 788 013c F3D0     		beq	.L38
- 188:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
- 789              		.loc 1 188 0 is_stmt 1
- 790 013e 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 791 0142 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 792 0146 1B68     		ldr	r3, [r3, #0]
- 793 0148 03F10102 		add	r2, r3, #1
- 794 014c 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
- 795 0150 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
- 796 0154 1A60     		str	r2, [r3, #0]
- 797              	.L30:
- 798              	.LBE15:
- 189:../timerFunctionsLSM.c **** 	}
- 190:../timerFunctionsLSM.c **** }
- 799              		.loc 1 190 0
- 800 0156 07F11807 		add	r7, r7, #24
- 801 015a BD46     		mov	sp, r7
- 802 015c 80BD     		pop	{r7, pc}
- 803              		.cfi_endproc
- 804              	.LFE114:
- 806 015e 00BF     		.text
- 807              	.Letext0:
- 808              		.file 2 "c:\\dave-3.1.10\\arm-gcc\\bin\\../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/i
- 809              		.file 3 "C:\\DAVE-3.1.10\\eclipse\\/../CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
- 810              		.file 4 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
- 811              		.file 5 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
- 812              		.file 6 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
- 813              		.file 7 "../LSM9DS1_Types.h"
- 814              		.file 8 "C:\\DAVE-3.1.10\\eclipse\\/../CMSIS/Include/core_cm4.h"
- 815              		.file 9 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
- 816              		.file 10 "../LSM9DS1_drivers.h"
+ 137:../timerFunctionsLSM.c **** 			else
+ 138:../timerFunctionsLSM.c **** 			{*/
+ 139:../timerFunctionsLSM.c **** 				data4.Data1.TDF_Type = I2C_TDF_MRxAck1;
+ 140:../timerFunctionsLSM.c **** 			//}
+ 141:../timerFunctionsLSM.c **** 			data4.Data1.Data = ubyteFF;
+ 142:../timerFunctionsLSM.c **** 			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
+ 143:../timerFunctionsLSM.c **** 			{
+ 144:../timerFunctionsLSM.c **** 				;
+ 145:../timerFunctionsLSM.c **** 			}
+ 146:../timerFunctionsLSM.c **** 			delay();
+ 147:../timerFunctionsLSM.c **** 			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+ 148:../timerFunctionsLSM.c **** 			{
+ 149:../timerFunctionsLSM.c **** 				;
+ 150:../timerFunctionsLSM.c **** 			}
+ 151:../timerFunctionsLSM.c **** 			delay();
+ 152:../timerFunctionsLSM.c **** 		//}
+ 153:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 154:../timerFunctionsLSM.c **** 	}
+ 155:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadBytes)
+ 156:../timerFunctionsLSM.c **** 	{
+ 157:../timerFunctionsLSM.c **** 		I2C001_DataType data5;
+ 158:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MStop;
+ 159:../timerFunctionsLSM.c **** 		data5.Data1.Data = ubyteFF;
+ 160:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+ 161:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 162:../timerFunctionsLSM.c **** 	}
+ 163:../timerFunctionsLSM.c **** 	else if(indexI2CreadBytes == 5)
+ 164:../timerFunctionsLSM.c **** 	{
+ 165:../timerFunctionsLSM.c **** 		break;
+ 166:../timerFunctionsLSM.c **** 	}
+ 167:../timerFunctionsLSM.c **** 	}
+ 459              		.loc 1 167 0
+ 460 000a 00BF     		nop
+ 461              	.L35:
+ 101:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadBytes)
+ 462              		.loc 1 101 0
+ 463 000c 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 464 0010 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 465 0014 1B68     		ldr	r3, [r3, #0]
+ 466 0016 002B     		cmp	r3, #0
+ 467 0018 27D1     		bne	.L22
+ 468              	.LBB8:
+ 104:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
+ 469              		.loc 1 104 0
+ 470 001a 4FF00403 		mov	r3, #4
+ 471 001e 7B77     		strb	r3, [r7, #29]
+ 105:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_WRITE);
+ 472              		.loc 1 105 0
+ 473 0020 40F20003 		movw	r3, #:lower16:addressTimerI2CReadBytes
+ 474 0024 C0F20003 		movt	r3, #:upper16:addressTimerI2CReadBytes
+ 475 0028 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 476 002a 4FEA4303 		lsl	r3, r3, #1
+ 477 002e DBB2     		uxtb	r3, r3
+ 478 0030 3B77     		strb	r3, [r7, #28]
+ 106:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 479              		.loc 1 106 0
+ 480 0032 00BF     		nop
+ 481              	.L23:
+ 106:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 482              		.loc 1 106 0 is_stmt 0 discriminator 1
+ 483 0034 07F11C03 		add	r3, r7, #28
+ 484 0038 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 485 003c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 486 0040 1946     		mov	r1, r3
+ 487 0042 FFF7FEFF 		bl	I2C001_WriteData
+ 488 0046 0346     		mov	r3, r0
+ 489 0048 002B     		cmp	r3, #0
+ 490 004a F3D0     		beq	.L23
+ 107:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 491              		.loc 1 107 0 is_stmt 1
+ 492 004c 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 493 0050 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 494 0054 1B68     		ldr	r3, [r3, #0]
+ 495 0056 03F10102 		add	r2, r3, #1
+ 496 005a 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 497 005e C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 498 0062 1A60     		str	r2, [r3, #0]
+ 108:../timerFunctionsLSM.c **** 		delay();
+ 499              		.loc 1 108 0
+ 500 0064 FFF7FEFF 		bl	delay
+ 501              	.LBE8:
+ 502              		.loc 1 167 0
+ 503 0068 CFE7     		b	.L36
+ 504              	.L22:
+ 110:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadBytes)
+ 505              		.loc 1 110 0
+ 506 006a 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 507 006e C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 508 0072 1B68     		ldr	r3, [r3, #0]
+ 509 0074 012B     		cmp	r3, #1
+ 510 0076 24D1     		bne	.L25
+ 511              	.LBB9:
+ 113:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
+ 512              		.loc 1 113 0
+ 513 0078 4FF00003 		mov	r3, #0
+ 514 007c 7B76     		strb	r3, [r7, #25]
+ 114:../timerFunctionsLSM.c **** 		data2.Data1.Data = (subAddressTimerI2CReadBytes);
+ 515              		.loc 1 114 0
+ 516 007e 40F20003 		movw	r3, #:lower16:subAddressTimerI2CReadBytes
+ 517 0082 C0F20003 		movt	r3, #:upper16:subAddressTimerI2CReadBytes
+ 518 0086 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 519 0088 3B76     		strb	r3, [r7, #24]
+ 115:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+ 520              		.loc 1 115 0
+ 521 008a 00BF     		nop
+ 522              	.L26:
+ 115:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+ 523              		.loc 1 115 0 is_stmt 0 discriminator 1
+ 524 008c 07F11803 		add	r3, r7, #24
+ 525 0090 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 526 0094 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 527 0098 1946     		mov	r1, r3
+ 528 009a FFF7FEFF 		bl	I2C001_WriteData
+ 529 009e 0346     		mov	r3, r0
+ 530 00a0 002B     		cmp	r3, #0
+ 531 00a2 F3D0     		beq	.L26
+ 116:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 532              		.loc 1 116 0 is_stmt 1
+ 533 00a4 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 534 00a8 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 535 00ac 1B68     		ldr	r3, [r3, #0]
+ 536 00ae 03F10102 		add	r2, r3, #1
+ 537 00b2 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 538 00b6 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 539 00ba 1A60     		str	r2, [r3, #0]
+ 117:../timerFunctionsLSM.c **** 		delay();
+ 540              		.loc 1 117 0
+ 541 00bc FFF7FEFF 		bl	delay
+ 542              	.LBE9:
+ 543              		.loc 1 167 0
+ 544 00c0 A3E7     		b	.L36
+ 545              	.L25:
+ 119:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadBytes)
+ 546              		.loc 1 119 0
+ 547 00c2 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 548 00c6 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 549 00ca 1B68     		ldr	r3, [r3, #0]
+ 550 00cc 022B     		cmp	r3, #2
+ 551 00ce 2AD1     		bne	.L27
+ 552              	.LBB10:
+ 122:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MRStart;
+ 553              		.loc 1 122 0
+ 554 00d0 4FF00503 		mov	r3, #5
+ 555 00d4 7B75     		strb	r3, [r7, #21]
+ 123:../timerFunctionsLSM.c **** 		data3.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_READ);
+ 556              		.loc 1 123 0
+ 557 00d6 40F20003 		movw	r3, #:lower16:addressTimerI2CReadBytes
+ 558 00da C0F20003 		movt	r3, #:upper16:addressTimerI2CReadBytes
+ 559 00de 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 560 00e0 4FEA4303 		lsl	r3, r3, #1
+ 561 00e4 DBB2     		uxtb	r3, r3
+ 562 00e6 43F00103 		orr	r3, r3, #1
+ 563 00ea DBB2     		uxtb	r3, r3
+ 564 00ec 3B75     		strb	r3, [r7, #20]
+ 124:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 565              		.loc 1 124 0
+ 566 00ee 00BF     		nop
+ 567              	.L28:
+ 124:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 568              		.loc 1 124 0 is_stmt 0 discriminator 1
+ 569 00f0 07F11403 		add	r3, r7, #20
+ 570 00f4 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 571 00f8 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 572 00fc 1946     		mov	r1, r3
+ 573 00fe FFF7FEFF 		bl	I2C001_WriteData
+ 574 0102 0346     		mov	r3, r0
+ 575 0104 002B     		cmp	r3, #0
+ 576 0106 F3D0     		beq	.L28
+ 125:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 577              		.loc 1 125 0 is_stmt 1
+ 578 0108 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 579 010c C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 580 0110 1B68     		ldr	r3, [r3, #0]
+ 581 0112 03F10102 		add	r2, r3, #1
+ 582 0116 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 583 011a C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 584 011e 1A60     		str	r2, [r3, #0]
+ 126:../timerFunctionsLSM.c **** 		delay();
+ 585              		.loc 1 126 0
+ 586 0120 FFF7FEFF 		bl	delay
+ 587              	.LBE10:
+ 588              		.loc 1 167 0
+ 589 0124 71E7     		b	.L36
+ 590              	.L27:
+ 128:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadBytes)
+ 591              		.loc 1 128 0
+ 592 0126 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 593 012a C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 594 012e 1B68     		ldr	r3, [r3, #0]
+ 595 0130 032B     		cmp	r3, #3
+ 596 0132 3AD1     		bne	.L29
+ 597              	.LBB11:
+ 139:../timerFunctionsLSM.c **** 				data4.Data1.TDF_Type = I2C_TDF_MRxAck1;
+ 598              		.loc 1 139 0
+ 599 0134 4FF00303 		mov	r3, #3
+ 600 0138 7B74     		strb	r3, [r7, #17]
+ 141:../timerFunctionsLSM.c **** 			data4.Data1.Data = ubyteFF;
+ 601              		.loc 1 141 0
+ 602 013a 4FF0FF03 		mov	r3, #255
+ 603 013e 3B74     		strb	r3, [r7, #16]
+ 142:../timerFunctionsLSM.c **** 			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
+ 604              		.loc 1 142 0
+ 605 0140 00BF     		nop
+ 606              	.L30:
+ 142:../timerFunctionsLSM.c **** 			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
+ 607              		.loc 1 142 0 is_stmt 0 discriminator 1
+ 608 0142 07F11003 		add	r3, r7, #16
+ 609 0146 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 610 014a C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 611 014e 1946     		mov	r1, r3
+ 612 0150 FFF7FEFF 		bl	I2C001_WriteData
+ 613 0154 0346     		mov	r3, r0
+ 614 0156 002B     		cmp	r3, #0
+ 615 0158 F3D0     		beq	.L30
+ 146:../timerFunctionsLSM.c **** 			delay();
+ 616              		.loc 1 146 0 is_stmt 1
+ 617 015a FFF7FEFF 		bl	delay
+ 147:../timerFunctionsLSM.c **** 			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+ 618              		.loc 1 147 0
+ 619 015e 00BF     		nop
+ 620              	.L31:
+ 147:../timerFunctionsLSM.c **** 			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+ 621              		.loc 1 147 0 is_stmt 0 discriminator 1
+ 622 0160 40F20003 		movw	r3, #:lower16:indexAccel
+ 623 0164 C0F20003 		movt	r3, #:upper16:indexAccel
+ 624 0168 1B68     		ldr	r3, [r3, #0]
+ 625 016a 4FEA4302 		lsl	r2, r3, #1
+ 626 016e 40F20003 		movw	r3, #:lower16:accelerationXYZ
+ 627 0172 C0F20003 		movt	r3, #:upper16:accelerationXYZ
+ 628 0176 D318     		adds	r3, r2, r3
+ 629 0178 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 630 017c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 631 0180 1946     		mov	r1, r3
+ 632 0182 FFF7FEFF 		bl	I2C001_ReadData
+ 633 0186 0346     		mov	r3, r0
+ 634 0188 002B     		cmp	r3, #0
+ 635 018a E9D0     		beq	.L31
+ 151:../timerFunctionsLSM.c **** 			delay();
+ 636              		.loc 1 151 0 is_stmt 1
+ 637 018c FFF7FEFF 		bl	delay
+ 153:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 638              		.loc 1 153 0
+ 639 0190 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 640 0194 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 641 0198 1B68     		ldr	r3, [r3, #0]
+ 642 019a 03F10102 		add	r2, r3, #1
+ 643 019e 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 644 01a2 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 645 01a6 1A60     		str	r2, [r3, #0]
+ 646              	.LBE11:
+ 647              		.loc 1 167 0
+ 648 01a8 2FE7     		b	.L36
+ 649              	.L29:
+ 155:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadBytes)
+ 650              		.loc 1 155 0
+ 651 01aa 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 652 01ae C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 653 01b2 1B68     		ldr	r3, [r3, #0]
+ 654 01b4 042B     		cmp	r3, #4
+ 655 01b6 1FD1     		bne	.L32
+ 656              	.LBB12:
+ 158:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MStop;
+ 657              		.loc 1 158 0
+ 658 01b8 4FF00603 		mov	r3, #6
+ 659 01bc 7B73     		strb	r3, [r7, #13]
+ 159:../timerFunctionsLSM.c **** 		data5.Data1.Data = ubyteFF;
+ 660              		.loc 1 159 0
+ 661 01be 4FF0FF03 		mov	r3, #255
+ 662 01c2 3B73     		strb	r3, [r7, #12]
+ 160:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+ 663              		.loc 1 160 0
+ 664 01c4 00BF     		nop
+ 665              	.L33:
+ 160:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+ 666              		.loc 1 160 0 is_stmt 0 discriminator 1
+ 667 01c6 07F10C03 		add	r3, r7, #12
+ 668 01ca 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 669 01ce C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 670 01d2 1946     		mov	r1, r3
+ 671 01d4 FFF7FEFF 		bl	I2C001_WriteData
+ 672 01d8 0346     		mov	r3, r0
+ 673 01da 002B     		cmp	r3, #0
+ 674 01dc F3D0     		beq	.L33
+ 161:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 675              		.loc 1 161 0 is_stmt 1
+ 676 01de 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 677 01e2 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 678 01e6 1B68     		ldr	r3, [r3, #0]
+ 679 01e8 03F10102 		add	r2, r3, #1
+ 680 01ec 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 681 01f0 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 682 01f4 1A60     		str	r2, [r3, #0]
+ 683              	.LBE12:
+ 684              		.loc 1 167 0
+ 685 01f6 08E7     		b	.L36
+ 686              	.L32:
+ 163:../timerFunctionsLSM.c **** 	else if(indexI2CreadBytes == 5)
+ 687              		.loc 1 163 0
+ 688 01f8 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 689 01fc C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 690 0200 1B68     		ldr	r3, [r3, #0]
+ 691 0202 052B     		cmp	r3, #5
+ 692 0204 7FF401AF 		bne	.L36
+ 165:../timerFunctionsLSM.c **** 		break;
+ 693              		.loc 1 165 0
+ 694 0208 00BF     		nop
+ 168:../timerFunctionsLSM.c **** }
+ 695              		.loc 1 168 0
+ 696 020a 07F12007 		add	r7, r7, #32
+ 697 020e BD46     		mov	sp, r7
+ 698 0210 80BD     		pop	{r7, pc}
+ 699              		.cfi_endproc
+ 700              	.LFE114:
+ 702 0212 00BF     		.section	.text.timerHandlerI2CreadBytes1,"ax",%progbits
+ 703              		.align	2
+ 704              		.global	timerHandlerI2CreadBytes1
+ 705              		.thumb
+ 706              		.thumb_func
+ 708              	timerHandlerI2CreadBytes1:
+ 709              	.LFB115:
+ 169:../timerFunctionsLSM.c **** 
+ 170:../timerFunctionsLSM.c **** 
+ 171:../timerFunctionsLSM.c **** void timerHandlerI2CreadBytes1(void *T)
+ 172:../timerFunctionsLSM.c **** {
+ 710              		.loc 1 172 0
+ 711              		.cfi_startproc
+ 712              		@ args = 0, pretend = 0, frame = 32
+ 713              		@ frame_needed = 1, uses_anonymous_args = 0
+ 714 0000 80B5     		push	{r7, lr}
+ 715              	.LCFI9:
+ 716              		.cfi_def_cfa_offset 8
+ 717              		.cfi_offset 7, -8
+ 718              		.cfi_offset 14, -4
+ 719 0002 88B0     		sub	sp, sp, #32
+ 720              	.LCFI10:
+ 721              		.cfi_def_cfa_offset 40
+ 722 0004 00AF     		add	r7, sp, #0
+ 723              	.LCFI11:
+ 724              		.cfi_def_cfa_register 7
+ 725 0006 7860     		str	r0, [r7, #4]
+ 173:../timerFunctionsLSM.c **** 	if(0 == indexI2CreadBytes)
+ 726              		.loc 1 173 0
+ 727 0008 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 728 000c C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 729 0010 1B68     		ldr	r3, [r3, #0]
+ 730 0012 002B     		cmp	r3, #0
+ 731 0014 25D1     		bne	.L38
+ 732              	.LBB13:
+ 174:../timerFunctionsLSM.c **** 	{
+ 175:../timerFunctionsLSM.c **** 		I2C001_DataType data1;
+ 176:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
+ 733              		.loc 1 176 0
+ 734 0016 4FF00403 		mov	r3, #4
+ 735 001a 7B77     		strb	r3, [r7, #29]
+ 177:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_WRITE);
+ 736              		.loc 1 177 0
+ 737 001c 40F20003 		movw	r3, #:lower16:addressTimerI2CReadBytes
+ 738 0020 C0F20003 		movt	r3, #:upper16:addressTimerI2CReadBytes
+ 739 0024 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 740 0026 4FEA4303 		lsl	r3, r3, #1
+ 741 002a DBB2     		uxtb	r3, r3
+ 742 002c 3B77     		strb	r3, [r7, #28]
+ 178:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 743              		.loc 1 178 0
+ 744 002e 00BF     		nop
+ 745              	.L39:
+ 746              		.loc 1 178 0 is_stmt 0 discriminator 1
+ 747 0030 07F11C03 		add	r3, r7, #28
+ 748 0034 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 749 0038 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 750 003c 1946     		mov	r1, r3
+ 751 003e FFF7FEFF 		bl	I2C001_WriteData
+ 752 0042 0346     		mov	r3, r0
+ 753 0044 002B     		cmp	r3, #0
+ 754 0046 F3D0     		beq	.L39
+ 179:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 755              		.loc 1 179 0 is_stmt 1
+ 756 0048 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 757 004c C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 758 0050 1B68     		ldr	r3, [r3, #0]
+ 759 0052 03F10102 		add	r2, r3, #1
+ 760 0056 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 761 005a C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 762 005e 1A60     		str	r2, [r3, #0]
+ 763 0060 3BE1     		b	.L37
+ 764              	.L38:
+ 765              	.LBE13:
+ 180:../timerFunctionsLSM.c **** 	}
+ 181:../timerFunctionsLSM.c **** 	else if(1 == indexI2CreadBytes)
+ 766              		.loc 1 181 0
+ 767 0062 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 768 0066 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 769 006a 1B68     		ldr	r3, [r3, #0]
+ 770 006c 012B     		cmp	r3, #1
+ 771 006e 22D1     		bne	.L41
+ 772              	.LBB14:
+ 182:../timerFunctionsLSM.c **** 	{
+ 183:../timerFunctionsLSM.c **** 		I2C001_DataType data2;
+ 184:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
+ 773              		.loc 1 184 0
+ 774 0070 4FF00003 		mov	r3, #0
+ 775 0074 7B76     		strb	r3, [r7, #25]
+ 185:../timerFunctionsLSM.c **** 		data2.Data1.Data = (subAddressTimerI2CReadBytes);
+ 776              		.loc 1 185 0
+ 777 0076 40F20003 		movw	r3, #:lower16:subAddressTimerI2CReadBytes
+ 778 007a C0F20003 		movt	r3, #:upper16:subAddressTimerI2CReadBytes
+ 779 007e 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 780 0080 3B76     		strb	r3, [r7, #24]
+ 186:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+ 781              		.loc 1 186 0
+ 782 0082 00BF     		nop
+ 783              	.L42:
+ 784              		.loc 1 186 0 is_stmt 0 discriminator 1
+ 785 0084 07F11803 		add	r3, r7, #24
+ 786 0088 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 787 008c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 788 0090 1946     		mov	r1, r3
+ 789 0092 FFF7FEFF 		bl	I2C001_WriteData
+ 790 0096 0346     		mov	r3, r0
+ 791 0098 002B     		cmp	r3, #0
+ 792 009a F3D0     		beq	.L42
+ 187:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 793              		.loc 1 187 0 is_stmt 1
+ 794 009c 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 795 00a0 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 796 00a4 1B68     		ldr	r3, [r3, #0]
+ 797 00a6 03F10102 		add	r2, r3, #1
+ 798 00aa 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 799 00ae C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 800 00b2 1A60     		str	r2, [r3, #0]
+ 801 00b4 11E1     		b	.L37
+ 802              	.L41:
+ 803              	.LBE14:
+ 188:../timerFunctionsLSM.c **** 	}
+ 189:../timerFunctionsLSM.c **** 	else if(2 == indexI2CreadBytes)
+ 804              		.loc 1 189 0
+ 805 00b6 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 806 00ba C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 807 00be 1B68     		ldr	r3, [r3, #0]
+ 808 00c0 022B     		cmp	r3, #2
+ 809 00c2 28D1     		bne	.L43
+ 810              	.LBB15:
+ 190:../timerFunctionsLSM.c **** 	{
+ 191:../timerFunctionsLSM.c **** 		I2C001_DataType data3;
+ 192:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MRStart;
+ 811              		.loc 1 192 0
+ 812 00c4 4FF00503 		mov	r3, #5
+ 813 00c8 7B75     		strb	r3, [r7, #21]
+ 193:../timerFunctionsLSM.c **** 		data3.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_READ);
+ 814              		.loc 1 193 0
+ 815 00ca 40F20003 		movw	r3, #:lower16:addressTimerI2CReadBytes
+ 816 00ce C0F20003 		movt	r3, #:upper16:addressTimerI2CReadBytes
+ 817 00d2 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 818 00d4 4FEA4303 		lsl	r3, r3, #1
+ 819 00d8 DBB2     		uxtb	r3, r3
+ 820 00da 43F00103 		orr	r3, r3, #1
+ 821 00de DBB2     		uxtb	r3, r3
+ 822 00e0 3B75     		strb	r3, [r7, #20]
+ 194:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 823              		.loc 1 194 0
+ 824 00e2 00BF     		nop
+ 825              	.L44:
+ 826              		.loc 1 194 0 is_stmt 0 discriminator 1
+ 827 00e4 07F11403 		add	r3, r7, #20
+ 828 00e8 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 829 00ec C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 830 00f0 1946     		mov	r1, r3
+ 831 00f2 FFF7FEFF 		bl	I2C001_WriteData
+ 832 00f6 0346     		mov	r3, r0
+ 833 00f8 002B     		cmp	r3, #0
+ 834 00fa F3D0     		beq	.L44
+ 195:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 835              		.loc 1 195 0 is_stmt 1
+ 836 00fc 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 837 0100 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 838 0104 1B68     		ldr	r3, [r3, #0]
+ 839 0106 03F10102 		add	r2, r3, #1
+ 840 010a 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 841 010e C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 842 0112 1A60     		str	r2, [r3, #0]
+ 843 0114 E1E0     		b	.L37
+ 844              	.L43:
+ 845              	.LBE15:
+ 196:../timerFunctionsLSM.c **** 	}
+ 197:../timerFunctionsLSM.c **** 	else if(3 == indexI2CreadBytes)
+ 846              		.loc 1 197 0
+ 847 0116 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 848 011a C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 849 011e 1B68     		ldr	r3, [r3, #0]
+ 850 0120 032B     		cmp	r3, #3
+ 851 0122 2FD1     		bne	.L45
+ 198:../timerFunctionsLSM.c **** 	{
+ 199:../timerFunctionsLSM.c **** 
+ 200:../timerFunctionsLSM.c **** 		while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+ 852              		.loc 1 200 0
+ 853 0124 00BF     		nop
+ 854              	.L46:
+ 855              		.loc 1 200 0 is_stmt 0 discriminator 1
+ 856 0126 40F20003 		movw	r3, #:lower16:indexAccel
+ 857 012a C0F20003 		movt	r3, #:upper16:indexAccel
+ 858 012e 1B68     		ldr	r3, [r3, #0]
+ 859 0130 4FEA4302 		lsl	r2, r3, #1
+ 860 0134 40F20003 		movw	r3, #:lower16:accelerationXYZ
+ 861 0138 C0F20003 		movt	r3, #:upper16:accelerationXYZ
+ 862 013c D318     		adds	r3, r2, r3
+ 863 013e 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 864 0142 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 865 0146 1946     		mov	r1, r3
+ 866 0148 FFF7FEFF 		bl	I2C001_ReadData
+ 867 014c 0346     		mov	r3, r0
+ 868 014e 002B     		cmp	r3, #0
+ 869 0150 E9D0     		beq	.L46
+ 201:../timerFunctionsLSM.c **** 		{
+ 202:../timerFunctionsLSM.c **** 			;
+ 203:../timerFunctionsLSM.c **** 		}
+ 204:../timerFunctionsLSM.c **** 		indexAccel++;
+ 870              		.loc 1 204 0 is_stmt 1
+ 871 0152 40F20003 		movw	r3, #:lower16:indexAccel
+ 872 0156 C0F20003 		movt	r3, #:upper16:indexAccel
+ 873 015a 1B68     		ldr	r3, [r3, #0]
+ 874 015c 03F10102 		add	r2, r3, #1
+ 875 0160 40F20003 		movw	r3, #:lower16:indexAccel
+ 876 0164 C0F20003 		movt	r3, #:upper16:indexAccel
+ 877 0168 1A60     		str	r2, [r3, #0]
+ 205:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 878              		.loc 1 205 0
+ 879 016a 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 880 016e C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 881 0172 1B68     		ldr	r3, [r3, #0]
+ 882 0174 03F10102 		add	r2, r3, #1
+ 883 0178 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 884 017c C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 885 0180 1A60     		str	r2, [r3, #0]
+ 886 0182 AAE0     		b	.L37
+ 887              	.L45:
+ 206:../timerFunctionsLSM.c **** 
+ 207:../timerFunctionsLSM.c **** 	}
+ 208:../timerFunctionsLSM.c **** 	else if(4 == indexI2CreadBytes)
+ 888              		.loc 1 208 0
+ 889 0184 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 890 0188 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 891 018c 1B68     		ldr	r3, [r3, #0]
+ 892 018e 042B     		cmp	r3, #4
+ 893 0190 1FD1     		bne	.L47
+ 894              	.LBB16:
+ 209:../timerFunctionsLSM.c **** 	{
+ 210:../timerFunctionsLSM.c **** 		I2C001_DataType data4;
+ 211:../timerFunctionsLSM.c **** 
+ 212:../timerFunctionsLSM.c **** 		data4.Data1.TDF_Type = I2C_TDF_MRxAck0;
+ 895              		.loc 1 212 0
+ 896 0192 4FF00203 		mov	r3, #2
+ 897 0196 7B74     		strb	r3, [r7, #17]
+ 213:../timerFunctionsLSM.c **** 
+ 214:../timerFunctionsLSM.c **** 
+ 215:../timerFunctionsLSM.c **** 		data4.Data1.Data = ubyteFF;
+ 898              		.loc 1 215 0
+ 899 0198 4FF0FF03 		mov	r3, #255
+ 900 019c 3B74     		strb	r3, [r7, #16]
+ 216:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data4))
+ 901              		.loc 1 216 0
+ 902 019e 00BF     		nop
+ 903              	.L48:
+ 904              		.loc 1 216 0 is_stmt 0 discriminator 1
+ 905 01a0 07F11003 		add	r3, r7, #16
+ 906 01a4 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 907 01a8 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 908 01ac 1946     		mov	r1, r3
+ 909 01ae FFF7FEFF 		bl	I2C001_WriteData
+ 910 01b2 0346     		mov	r3, r0
+ 911 01b4 002B     		cmp	r3, #0
+ 912 01b6 F3D0     		beq	.L48
+ 217:../timerFunctionsLSM.c **** 		{
+ 218:../timerFunctionsLSM.c **** 			;
+ 219:../timerFunctionsLSM.c **** 		}
+ 220:../timerFunctionsLSM.c **** 
+ 221:../timerFunctionsLSM.c **** 		//}
+ 222:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 913              		.loc 1 222 0 is_stmt 1
+ 914 01b8 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 915 01bc C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 916 01c0 1B68     		ldr	r3, [r3, #0]
+ 917 01c2 03F10102 		add	r2, r3, #1
+ 918 01c6 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 919 01ca C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 920 01ce 1A60     		str	r2, [r3, #0]
+ 921 01d0 83E0     		b	.L37
+ 922              	.L47:
+ 923              	.LBE16:
+ 223:../timerFunctionsLSM.c **** 	}
+ 224:../timerFunctionsLSM.c **** 	else if(5 == indexI2CreadBytes)
+ 924              		.loc 1 224 0
+ 925 01d2 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 926 01d6 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 927 01da 1B68     		ldr	r3, [r3, #0]
+ 928 01dc 052B     		cmp	r3, #5
+ 929 01de 2FD1     		bne	.L49
+ 225:../timerFunctionsLSM.c **** 	{
+ 226:../timerFunctionsLSM.c **** 		while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+ 930              		.loc 1 226 0
+ 931 01e0 00BF     		nop
+ 932              	.L50:
+ 933              		.loc 1 226 0 is_stmt 0 discriminator 1
+ 934 01e2 40F20003 		movw	r3, #:lower16:indexAccel
+ 935 01e6 C0F20003 		movt	r3, #:upper16:indexAccel
+ 936 01ea 1B68     		ldr	r3, [r3, #0]
+ 937 01ec 4FEA4302 		lsl	r2, r3, #1
+ 938 01f0 40F20003 		movw	r3, #:lower16:accelerationXYZ
+ 939 01f4 C0F20003 		movt	r3, #:upper16:accelerationXYZ
+ 940 01f8 D318     		adds	r3, r2, r3
+ 941 01fa 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 942 01fe C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 943 0202 1946     		mov	r1, r3
+ 944 0204 FFF7FEFF 		bl	I2C001_ReadData
+ 945 0208 0346     		mov	r3, r0
+ 946 020a 002B     		cmp	r3, #0
+ 947 020c E9D0     		beq	.L50
+ 227:../timerFunctionsLSM.c **** 		{
+ 228:../timerFunctionsLSM.c **** 			;
+ 229:../timerFunctionsLSM.c **** 		}
+ 230:../timerFunctionsLSM.c **** 		indexAccel++;
+ 948              		.loc 1 230 0 is_stmt 1
+ 949 020e 40F20003 		movw	r3, #:lower16:indexAccel
+ 950 0212 C0F20003 		movt	r3, #:upper16:indexAccel
+ 951 0216 1B68     		ldr	r3, [r3, #0]
+ 952 0218 03F10102 		add	r2, r3, #1
+ 953 021c 40F20003 		movw	r3, #:lower16:indexAccel
+ 954 0220 C0F20003 		movt	r3, #:upper16:indexAccel
+ 955 0224 1A60     		str	r2, [r3, #0]
+ 231:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 956              		.loc 1 231 0
+ 957 0226 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 958 022a C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 959 022e 1B68     		ldr	r3, [r3, #0]
+ 960 0230 03F10102 		add	r2, r3, #1
+ 961 0234 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 962 0238 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 963 023c 1A60     		str	r2, [r3, #0]
+ 964 023e 4CE0     		b	.L37
+ 965              	.L49:
+ 232:../timerFunctionsLSM.c **** 	}
+ 233:../timerFunctionsLSM.c **** 	else if(6 == indexI2CreadBytes)
+ 966              		.loc 1 233 0
+ 967 0240 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 968 0244 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 969 0248 1B68     		ldr	r3, [r3, #0]
+ 970 024a 062B     		cmp	r3, #6
+ 971 024c 1FD1     		bne	.L51
+ 972              	.LBB17:
+ 234:../timerFunctionsLSM.c **** 	{
+ 235:../timerFunctionsLSM.c **** 		I2C001_DataType data5;
+ 236:../timerFunctionsLSM.c **** 
+ 237:../timerFunctionsLSM.c **** 		data5.Data1.TDF_Type = I2C_TDF_MRxAck1;
+ 973              		.loc 1 237 0
+ 974 024e 4FF00303 		mov	r3, #3
+ 975 0252 7B73     		strb	r3, [r7, #13]
+ 238:../timerFunctionsLSM.c **** 
+ 239:../timerFunctionsLSM.c **** 
+ 240:../timerFunctionsLSM.c **** 		data5.Data1.Data = ubyteFF;
+ 976              		.loc 1 240 0
+ 977 0254 4FF0FF03 		mov	r3, #255
+ 978 0258 3B73     		strb	r3, [r7, #12]
+ 241:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data5))
+ 979              		.loc 1 241 0
+ 980 025a 00BF     		nop
+ 981              	.L52:
+ 982              		.loc 1 241 0 is_stmt 0 discriminator 1
+ 983 025c 07F10C03 		add	r3, r7, #12
+ 984 0260 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 985 0264 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 986 0268 1946     		mov	r1, r3
+ 987 026a FFF7FEFF 		bl	I2C001_WriteData
+ 988 026e 0346     		mov	r3, r0
+ 989 0270 002B     		cmp	r3, #0
+ 990 0272 F3D0     		beq	.L52
+ 242:../timerFunctionsLSM.c **** 		{
+ 243:../timerFunctionsLSM.c **** 			;
+ 244:../timerFunctionsLSM.c **** 		}
+ 245:../timerFunctionsLSM.c **** 
+ 246:../timerFunctionsLSM.c **** 		//}
+ 247:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 991              		.loc 1 247 0 is_stmt 1
+ 992 0274 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 993 0278 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 994 027c 1B68     		ldr	r3, [r3, #0]
+ 995 027e 03F10102 		add	r2, r3, #1
+ 996 0282 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 997 0286 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 998 028a 1A60     		str	r2, [r3, #0]
+ 999 028c 25E0     		b	.L37
+ 1000              	.L51:
+ 1001              	.LBE17:
+ 248:../timerFunctionsLSM.c **** 	}
+ 249:../timerFunctionsLSM.c **** 	else if(7 == indexI2CreadBytes)
+ 1002              		.loc 1 249 0
+ 1003 028e 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 1004 0292 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 1005 0296 1B68     		ldr	r3, [r3, #0]
+ 1006 0298 072B     		cmp	r3, #7
+ 1007 029a 1ED1     		bne	.L37
+ 1008              	.LBB18:
+ 250:../timerFunctionsLSM.c **** 	{
+ 251:../timerFunctionsLSM.c **** 		I2C001_DataType data6;
+ 252:../timerFunctionsLSM.c **** 		data6.Data1.TDF_Type = I2C_TDF_MStop;
+ 1009              		.loc 1 252 0
+ 1010 029c 4FF00603 		mov	r3, #6
+ 1011 02a0 7B72     		strb	r3, [r7, #9]
+ 253:../timerFunctionsLSM.c **** 		data6.Data1.Data = ubyteFF;
+ 1012              		.loc 1 253 0
+ 1013 02a2 4FF0FF03 		mov	r3, #255
+ 1014 02a6 3B72     		strb	r3, [r7, #8]
+ 254:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data6));
+ 1015              		.loc 1 254 0
+ 1016 02a8 00BF     		nop
+ 1017              	.L53:
+ 1018              		.loc 1 254 0 is_stmt 0 discriminator 1
+ 1019 02aa 07F10803 		add	r3, r7, #8
+ 1020 02ae 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 1021 02b2 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 1022 02b6 1946     		mov	r1, r3
+ 1023 02b8 FFF7FEFF 		bl	I2C001_WriteData
+ 1024 02bc 0346     		mov	r3, r0
+ 1025 02be 002B     		cmp	r3, #0
+ 1026 02c0 F3D0     		beq	.L53
+ 255:../timerFunctionsLSM.c **** 		indexI2CreadBytes++;
+ 1027              		.loc 1 255 0 is_stmt 1
+ 1028 02c2 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 1029 02c6 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 1030 02ca 1B68     		ldr	r3, [r3, #0]
+ 1031 02cc 03F10102 		add	r2, r3, #1
+ 1032 02d0 40F20003 		movw	r3, #:lower16:indexI2CreadBytes
+ 1033 02d4 C0F20003 		movt	r3, #:upper16:indexI2CreadBytes
+ 1034 02d8 1A60     		str	r2, [r3, #0]
+ 1035              	.L37:
+ 1036              	.LBE18:
+ 256:../timerFunctionsLSM.c **** 	}
+ 257:../timerFunctionsLSM.c **** }
+ 1037              		.loc 1 257 0
+ 1038 02da 07F12007 		add	r7, r7, #32
+ 1039 02de BD46     		mov	sp, r7
+ 1040 02e0 80BD     		pop	{r7, pc}
+ 1041              		.cfi_endproc
+ 1042              	.LFE115:
+ 1044 02e2 00BF     		.section	.text.timerHandlerI2CwriteByte,"ax",%progbits
+ 1045              		.align	2
+ 1046              		.global	timerHandlerI2CwriteByte
+ 1047              		.thumb
+ 1048              		.thumb_func
+ 1050              	timerHandlerI2CwriteByte:
+ 1051              	.LFB116:
+ 258:../timerFunctionsLSM.c **** 
+ 259:../timerFunctionsLSM.c **** void timerHandlerI2CwriteByte(void *T)
+ 260:../timerFunctionsLSM.c **** {
+ 1052              		.loc 1 260 0
+ 1053              		.cfi_startproc
+ 1054              		@ args = 0, pretend = 0, frame = 24
+ 1055              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1056 0000 80B5     		push	{r7, lr}
+ 1057              	.LCFI12:
+ 1058              		.cfi_def_cfa_offset 8
+ 1059              		.cfi_offset 7, -8
+ 1060              		.cfi_offset 14, -4
+ 1061 0002 86B0     		sub	sp, sp, #24
+ 1062              	.LCFI13:
+ 1063              		.cfi_def_cfa_offset 32
+ 1064 0004 00AF     		add	r7, sp, #0
+ 1065              	.LCFI14:
+ 1066              		.cfi_def_cfa_register 7
+ 1067 0006 7860     		str	r0, [r7, #4]
+ 1068 0008 00E0     		b	.L65
+ 1069              	.L66:
+ 261:../timerFunctionsLSM.c **** 	while(1){
+ 262:../timerFunctionsLSM.c **** 	if(0 == indexI2CwriteByte)
+ 263:../timerFunctionsLSM.c **** 	{
+ 264:../timerFunctionsLSM.c **** 		I2C001_DataType data1;
+ 265:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
+ 266:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerWrite<<1) | I2C_WRITE);
+ 267:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 268:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 269:../timerFunctionsLSM.c **** 		delay();
+ 270:../timerFunctionsLSM.c **** 	}
+ 271:../timerFunctionsLSM.c **** 	else if(1 == indexI2CwriteByte)
+ 272:../timerFunctionsLSM.c **** 	{
+ 273:../timerFunctionsLSM.c **** 		I2C001_DataType data2;
+ 274:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
+ 275:../timerFunctionsLSM.c **** 		data2.Data1.Data = subAddressTimerWrite;
+ 276:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+ 277:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 278:../timerFunctionsLSM.c **** 		delay();
+ 279:../timerFunctionsLSM.c **** 	}
+ 280:../timerFunctionsLSM.c **** 	else if(2 == indexI2CwriteByte)
+ 281:../timerFunctionsLSM.c **** 	{
+ 282:../timerFunctionsLSM.c **** 		I2C001_DataType data3;
+ 283:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MTxData;
+ 284:../timerFunctionsLSM.c **** 		data3.Data1.Data = dataWrite;
+ 285:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 286:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 287:../timerFunctionsLSM.c **** 		delay();
+ 288:../timerFunctionsLSM.c **** 	}
+ 289:../timerFunctionsLSM.c **** 	else if(3 == indexI2CwriteByte)
+ 290:../timerFunctionsLSM.c **** 	{
+ 291:../timerFunctionsLSM.c **** 		I2C001_DataType data4;
+ 292:../timerFunctionsLSM.c **** 		data4.Data1.TDF_Type = I2C_TDF_MStop;
+ 293:../timerFunctionsLSM.c **** 		data4.Data1.Data = ubyteFF;
+ 294:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data4));
+ 295:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 296:../timerFunctionsLSM.c **** 		delay();
+ 297:../timerFunctionsLSM.c **** 	}
+ 298:../timerFunctionsLSM.c **** 	else if(4 == indexI2CwriteByte)
+ 299:../timerFunctionsLSM.c **** 	{
+ 300:../timerFunctionsLSM.c **** 		break;
+ 301:../timerFunctionsLSM.c **** 	}
+ 302:../timerFunctionsLSM.c **** 	}
+ 1070              		.loc 1 302 0
+ 1071 000a 00BF     		nop
+ 1072              	.L65:
+ 262:../timerFunctionsLSM.c **** 	if(0 == indexI2CwriteByte)
+ 1073              		.loc 1 262 0
+ 1074 000c 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1075 0010 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1076 0014 1B68     		ldr	r3, [r3, #0]
+ 1077 0016 002B     		cmp	r3, #0
+ 1078 0018 27D1     		bne	.L55
+ 1079              	.LBB19:
+ 265:../timerFunctionsLSM.c **** 		data1.Data1.TDF_Type = I2C_TDF_MStart;
+ 1080              		.loc 1 265 0
+ 1081 001a 4FF00403 		mov	r3, #4
+ 1082 001e 7B75     		strb	r3, [r7, #21]
+ 266:../timerFunctionsLSM.c **** 		data1.Data1.Data = ((addressTimerWrite<<1) | I2C_WRITE);
+ 1083              		.loc 1 266 0
+ 1084 0020 40F20003 		movw	r3, #:lower16:addressTimerWrite
+ 1085 0024 C0F20003 		movt	r3, #:upper16:addressTimerWrite
+ 1086 0028 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1087 002a 4FEA4303 		lsl	r3, r3, #1
+ 1088 002e DBB2     		uxtb	r3, r3
+ 1089 0030 3B75     		strb	r3, [r7, #20]
+ 267:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 1090              		.loc 1 267 0
+ 1091 0032 00BF     		nop
+ 1092              	.L56:
+ 267:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+ 1093              		.loc 1 267 0 is_stmt 0 discriminator 1
+ 1094 0034 07F11403 		add	r3, r7, #20
+ 1095 0038 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 1096 003c C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 1097 0040 1946     		mov	r1, r3
+ 1098 0042 FFF7FEFF 		bl	I2C001_WriteData
+ 1099 0046 0346     		mov	r3, r0
+ 1100 0048 002B     		cmp	r3, #0
+ 1101 004a F3D0     		beq	.L56
+ 268:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 1102              		.loc 1 268 0 is_stmt 1
+ 1103 004c 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1104 0050 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1105 0054 1B68     		ldr	r3, [r3, #0]
+ 1106 0056 03F10102 		add	r2, r3, #1
+ 1107 005a 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1108 005e C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1109 0062 1A60     		str	r2, [r3, #0]
+ 269:../timerFunctionsLSM.c **** 		delay();
+ 1110              		.loc 1 269 0
+ 1111 0064 FFF7FEFF 		bl	delay
+ 1112              	.LBE19:
+ 1113              		.loc 1 302 0
+ 1114 0068 CFE7     		b	.L66
+ 1115              	.L55:
+ 271:../timerFunctionsLSM.c **** 	else if(1 == indexI2CwriteByte)
+ 1116              		.loc 1 271 0
+ 1117 006a 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1118 006e C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1119 0072 1B68     		ldr	r3, [r3, #0]
+ 1120 0074 012B     		cmp	r3, #1
+ 1121 0076 24D1     		bne	.L58
+ 1122              	.LBB20:
+ 274:../timerFunctionsLSM.c **** 		data2.Data1.TDF_Type = I2C_TDF_MTxData;
+ 1123              		.loc 1 274 0
+ 1124 0078 4FF00003 		mov	r3, #0
+ 1125 007c 7B74     		strb	r3, [r7, #17]
+ 275:../timerFunctionsLSM.c **** 		data2.Data1.Data = subAddressTimerWrite;
+ 1126              		.loc 1 275 0
+ 1127 007e 40F20003 		movw	r3, #:lower16:subAddressTimerWrite
+ 1128 0082 C0F20003 		movt	r3, #:upper16:subAddressTimerWrite
+ 1129 0086 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1130 0088 3B74     		strb	r3, [r7, #16]
+ 276:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+ 1131              		.loc 1 276 0
+ 1132 008a 00BF     		nop
+ 1133              	.L59:
+ 276:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+ 1134              		.loc 1 276 0 is_stmt 0 discriminator 1
+ 1135 008c 07F11003 		add	r3, r7, #16
+ 1136 0090 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 1137 0094 C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 1138 0098 1946     		mov	r1, r3
+ 1139 009a FFF7FEFF 		bl	I2C001_WriteData
+ 1140 009e 0346     		mov	r3, r0
+ 1141 00a0 002B     		cmp	r3, #0
+ 1142 00a2 F3D0     		beq	.L59
+ 277:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 1143              		.loc 1 277 0 is_stmt 1
+ 1144 00a4 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1145 00a8 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1146 00ac 1B68     		ldr	r3, [r3, #0]
+ 1147 00ae 03F10102 		add	r2, r3, #1
+ 1148 00b2 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1149 00b6 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1150 00ba 1A60     		str	r2, [r3, #0]
+ 278:../timerFunctionsLSM.c **** 		delay();
+ 1151              		.loc 1 278 0
+ 1152 00bc FFF7FEFF 		bl	delay
+ 1153              	.LBE20:
+ 1154              		.loc 1 302 0
+ 1155 00c0 A3E7     		b	.L66
+ 1156              	.L58:
+ 280:../timerFunctionsLSM.c **** 	else if(2 == indexI2CwriteByte)
+ 1157              		.loc 1 280 0
+ 1158 00c2 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1159 00c6 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1160 00ca 1B68     		ldr	r3, [r3, #0]
+ 1161 00cc 022B     		cmp	r3, #2
+ 1162 00ce 24D1     		bne	.L60
+ 1163              	.LBB21:
+ 283:../timerFunctionsLSM.c **** 		data3.Data1.TDF_Type = I2C_TDF_MTxData;
+ 1164              		.loc 1 283 0
+ 1165 00d0 4FF00003 		mov	r3, #0
+ 1166 00d4 7B73     		strb	r3, [r7, #13]
+ 284:../timerFunctionsLSM.c **** 		data3.Data1.Data = dataWrite;
+ 1167              		.loc 1 284 0
+ 1168 00d6 40F20003 		movw	r3, #:lower16:dataWrite
+ 1169 00da C0F20003 		movt	r3, #:upper16:dataWrite
+ 1170 00de 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1171 00e0 3B73     		strb	r3, [r7, #12]
+ 285:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 1172              		.loc 1 285 0
+ 1173 00e2 00BF     		nop
+ 1174              	.L61:
+ 285:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+ 1175              		.loc 1 285 0 is_stmt 0 discriminator 1
+ 1176 00e4 07F10C03 		add	r3, r7, #12
+ 1177 00e8 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 1178 00ec C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 1179 00f0 1946     		mov	r1, r3
+ 1180 00f2 FFF7FEFF 		bl	I2C001_WriteData
+ 1181 00f6 0346     		mov	r3, r0
+ 1182 00f8 002B     		cmp	r3, #0
+ 1183 00fa F3D0     		beq	.L61
+ 286:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 1184              		.loc 1 286 0 is_stmt 1
+ 1185 00fc 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1186 0100 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1187 0104 1B68     		ldr	r3, [r3, #0]
+ 1188 0106 03F10102 		add	r2, r3, #1
+ 1189 010a 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1190 010e C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1191 0112 1A60     		str	r2, [r3, #0]
+ 287:../timerFunctionsLSM.c **** 		delay();
+ 1192              		.loc 1 287 0
+ 1193 0114 FFF7FEFF 		bl	delay
+ 1194              	.LBE21:
+ 1195              		.loc 1 302 0
+ 1196 0118 77E7     		b	.L66
+ 1197              	.L60:
+ 289:../timerFunctionsLSM.c **** 	else if(3 == indexI2CwriteByte)
+ 1198              		.loc 1 289 0
+ 1199 011a 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1200 011e C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1201 0122 1B68     		ldr	r3, [r3, #0]
+ 1202 0124 032B     		cmp	r3, #3
+ 1203 0126 21D1     		bne	.L62
+ 1204              	.LBB22:
+ 292:../timerFunctionsLSM.c **** 		data4.Data1.TDF_Type = I2C_TDF_MStop;
+ 1205              		.loc 1 292 0
+ 1206 0128 4FF00603 		mov	r3, #6
+ 1207 012c 7B72     		strb	r3, [r7, #9]
+ 293:../timerFunctionsLSM.c **** 		data4.Data1.Data = ubyteFF;
+ 1208              		.loc 1 293 0
+ 1209 012e 4FF0FF03 		mov	r3, #255
+ 1210 0132 3B72     		strb	r3, [r7, #8]
+ 294:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data4));
+ 1211              		.loc 1 294 0
+ 1212 0134 00BF     		nop
+ 1213              	.L63:
+ 294:../timerFunctionsLSM.c **** 		while(!I2C001_WriteData(&I2C001_Handle0,&data4));
+ 1214              		.loc 1 294 0 is_stmt 0 discriminator 1
+ 1215 0136 07F10803 		add	r3, r7, #8
+ 1216 013a 40F20000 		movw	r0, #:lower16:I2C001_Handle0
+ 1217 013e C0F20000 		movt	r0, #:upper16:I2C001_Handle0
+ 1218 0142 1946     		mov	r1, r3
+ 1219 0144 FFF7FEFF 		bl	I2C001_WriteData
+ 1220 0148 0346     		mov	r3, r0
+ 1221 014a 002B     		cmp	r3, #0
+ 1222 014c F3D0     		beq	.L63
+ 295:../timerFunctionsLSM.c **** 		indexI2CwriteByte++;
+ 1223              		.loc 1 295 0 is_stmt 1
+ 1224 014e 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1225 0152 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1226 0156 1B68     		ldr	r3, [r3, #0]
+ 1227 0158 03F10102 		add	r2, r3, #1
+ 1228 015c 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1229 0160 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1230 0164 1A60     		str	r2, [r3, #0]
+ 296:../timerFunctionsLSM.c **** 		delay();
+ 1231              		.loc 1 296 0
+ 1232 0166 FFF7FEFF 		bl	delay
+ 1233              	.LBE22:
+ 1234              		.loc 1 302 0
+ 1235 016a 4EE7     		b	.L66
+ 1236              	.L62:
+ 298:../timerFunctionsLSM.c **** 	else if(4 == indexI2CwriteByte)
+ 1237              		.loc 1 298 0
+ 1238 016c 40F20003 		movw	r3, #:lower16:indexI2CwriteByte
+ 1239 0170 C0F20003 		movt	r3, #:upper16:indexI2CwriteByte
+ 1240 0174 1B68     		ldr	r3, [r3, #0]
+ 1241 0176 042B     		cmp	r3, #4
+ 1242 0178 7FF447AF 		bne	.L66
+ 300:../timerFunctionsLSM.c **** 		break;
+ 1243              		.loc 1 300 0
+ 1244 017c 00BF     		nop
+ 303:../timerFunctionsLSM.c **** }
+ 1245              		.loc 1 303 0
+ 1246 017e 07F11807 		add	r7, r7, #24
+ 1247 0182 BD46     		mov	sp, r7
+ 1248 0184 80BD     		pop	{r7, pc}
+ 1249              		.cfi_endproc
+ 1250              	.LFE116:
+ 1252 0186 00BF     		.text
+ 1253              	.Letext0:
+ 1254              		.file 2 "c:\\dave-3.1.10\\arm-gcc\\bin\\../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/i
+ 1255              		.file 3 "C:\\DAVE-3.1.10\\eclipse\\/../CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+ 1256              		.file 4 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
+ 1257              		.file 5 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
+ 1258              		.file 6 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
+ 1259              		.file 7 "../LSM9DS1_Types.h"
+ 1260              		.file 8 "C:\\DAVE-3.1.10\\eclipse\\/../CMSIS/Include/core_cm4.h"
+ 1261              		.file 9 "C:\\DAVE3_workspace\\mojWorkspace\\Bachelor\\Dave\\Generated\\inc\\DAVESupport/../../inc/
+ 1262              		.file 10 "../LSM9DS1_drivers.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 timerFunctionsLSM.c
                             *COM*:00000004 TimerId
@@ -1041,25 +1667,29 @@ DEFINED SYMBOLS
                             *COM*:00000002 my
                             *COM*:00000002 mz
                             *COM*:00000002 temperature
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:53     .bss:00000000 indexI2CreadByte
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:50     .bss:00000000 $d
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:58     .bss:00000004 addressTimer
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:63     .bss:00000005 subAddressTimer
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:69     .bss:00000006 DataReceive2
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:75     .bss:00000008 indexI2CreadBytes
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:80     .bss:0000000c addressTimerI2CReadBytes
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:85     .bss:0000000d subAddressTimerI2CReadBytes
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:91     .bss:00000010 indexI2CwriteByte
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:96     .bss:00000014 addressTimerWrite
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:101    .bss:00000015 subAddressTimerWrite
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:106    .bss:00000016 dataWrite
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:112    .bss:00000018 accelerationXYZ
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:115    .text.timerHandlerI2CreadByte:00000000 $t
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:120    .text.timerHandlerI2CreadByte:00000000 timerHandlerI2CreadByte
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:366    .text.timerHandlerI2CreadBytes:00000000 $t
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:371    .text.timerHandlerI2CreadBytes:00000000 timerHandlerI2CreadBytes
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:625    .text.timerHandlerI2CwriteByte:00000000 $t
-C:\Users\Mateusz\AppData\Local\Temp\ccj4EHb7.s:630    .text.timerHandlerI2CwriteByte:00000000 timerHandlerI2CwriteByte
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:53     .bss:00000000 indexI2CreadByte
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:50     .bss:00000000 $d
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:58     .bss:00000004 addressTimer
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:63     .bss:00000005 subAddressTimer
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:69     .bss:00000006 DataReceive2
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:75     .bss:00000008 indexI2CreadBytes
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:80     .bss:0000000c addressTimerI2CReadBytes
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:85     .bss:0000000d subAddressTimerI2CReadBytes
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:91     .bss:00000010 indexI2CwriteByte
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:96     .bss:00000014 addressTimerWrite
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:101    .bss:00000015 subAddressTimerWrite
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:106    .bss:00000016 dataWrite
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:112    .bss:00000018 accelerationXYZ
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:115    .text.timerHandlerI2CreadByte:00000000 $t
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:120    .text.timerHandlerI2CreadByte:00000000 timerHandlerI2CreadByte
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:386    .text.delay:00000000 $t
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:391    .text.delay:00000000 delay
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:434    .text.timerHandlerI2CreadBytes:00000000 $t
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:439    .text.timerHandlerI2CreadBytes:00000000 timerHandlerI2CreadBytes
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:703    .text.timerHandlerI2CreadBytes1:00000000 $t
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:708    .text.timerHandlerI2CreadBytes1:00000000 timerHandlerI2CreadBytes1
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:1045   .text.timerHandlerI2CwriteByte:00000000 $t
+C:\Users\Mateusz\AppData\Local\Temp\ccUBBOfr.s:1050   .text.timerHandlerI2CwriteByte:00000000 timerHandlerI2CwriteByte
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.35166846b5321d4273ad8c4248893ac3
                            .group:00000000 wm4.newlib.h.8.a9901dc52d1357e3e94003403d43f8b5

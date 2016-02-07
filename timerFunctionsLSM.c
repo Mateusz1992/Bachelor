@@ -34,6 +34,7 @@ void timerHandlerI2CreadByte(void *T)
 	uint8_t data; // `data` will store the register data
 
 	//wyslanie warunku startowego
+	while(1){
 	if(0 == indexI2CreadByte)
 	{
 		I2C001_DataType data1;
@@ -82,11 +83,93 @@ void timerHandlerI2CreadByte(void *T)
 		}
 		indexI2CreadByte++;
 	}
+	else if(6 == indexI2CreadByte)
+	{
+		break;
+	}
+}
+}
+
+void delay(void)
+{
+	for(int e = 0; e < 400; e++);
 }
 
 void timerHandlerI2CreadBytes(void *T)
 {
 	while(1){
+	if(0 == indexI2CreadBytes)
+	{
+		I2C001_DataType data1;
+		data1.Data1.TDF_Type = I2C_TDF_MStart;
+		data1.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_WRITE);
+		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
+		indexI2CreadBytes++;
+		delay();
+	}
+	else if(1 == indexI2CreadBytes)
+	{
+		I2C001_DataType data2;
+		data2.Data1.TDF_Type = I2C_TDF_MTxData;
+		data2.Data1.Data = (subAddressTimerI2CReadBytes);
+		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
+		indexI2CreadBytes++;
+		delay();
+	}
+	else if(2 == indexI2CreadBytes)
+	{
+		I2C001_DataType data3;
+		data3.Data1.TDF_Type = I2C_TDF_MRStart;
+		data3.Data1.Data = ((addressTimerI2CReadBytes<<1) | I2C_READ);
+		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
+		indexI2CreadBytes++;
+		delay();
+	}
+	else if(3 == indexI2CreadBytes)
+	{
+		I2C001_DataType data4;
+		/*for(int i = 0; i < 6; i++)
+		{
+			if(i !=5)
+			{*/
+				/*data4.Data1.TDF_Type = I2C_TDF_MRxAck0;
+			}
+			else
+			{*/
+				data4.Data1.TDF_Type = I2C_TDF_MRxAck1;
+			//}
+			data4.Data1.Data = ubyteFF;
+			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
+			{
+				;
+			}
+			delay();
+			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+			{
+				;
+			}
+			delay();
+		//}
+		indexI2CreadBytes++;
+	}
+	else if(4 == indexI2CreadBytes)
+	{
+		I2C001_DataType data5;
+		data5.Data1.TDF_Type = I2C_TDF_MStop;
+		data5.Data1.Data = ubyteFF;
+		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+		indexI2CreadBytes++;
+	}
+	else if(indexI2CreadBytes == 5)
+	{
+		break;
+	}
+	}
+}
+
+
+void timerHandlerI2CreadBytes1(void *T)
+{
 	if(0 == indexI2CreadBytes)
 	{
 		I2C001_DataType data1;
@@ -113,48 +196,69 @@ void timerHandlerI2CreadBytes(void *T)
 	}
 	else if(3 == indexI2CreadBytes)
 	{
-		I2C001_DataType data4;
-		/*for(int i = 0; i < 6; i++)
-		{
-			if(i !=5)
-			{*/
-				/*data4.Data1.TDF_Type = I2C_TDF_MRxAck0;
-			}
-			else
-			{*/
-				data4.Data1.TDF_Type = I2C_TDF_MRxAck1;
-			//}
-			data4.Data1.Data = ubyteFF;
-			while(!I2C001_WriteData(&I2C001_Handle0,&data4))
-			{
-				;
-			}
 
-			while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
-			{
-				;
-			}
-		//}
+		while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+		{
+			;
+		}
+		indexAccel++;
 		indexI2CreadBytes++;
+
 	}
 	else if(4 == indexI2CreadBytes)
 	{
-		I2C001_DataType data5;
-		data5.Data1.TDF_Type = I2C_TDF_MStop;
-		data5.Data1.Data = ubyteFF;
-		while(!I2C001_WriteData(&I2C001_Handle0,&data5));
+		I2C001_DataType data4;
+
+		data4.Data1.TDF_Type = I2C_TDF_MRxAck0;
+
+
+		data4.Data1.Data = ubyteFF;
+		while(!I2C001_WriteData(&I2C001_Handle0,&data4))
+		{
+			;
+		}
+
+		//}
 		indexI2CreadBytes++;
 	}
-	else if(indexI2CreadBytes == 5)
+	else if(5 == indexI2CreadBytes)
 	{
-		break;
+		while(!I2C001_ReadData(&I2C001_Handle0,&accelerationXYZ[indexAccel]))
+		{
+			;
+		}
+		indexAccel++;
+		indexI2CreadBytes++;
 	}
+	else if(6 == indexI2CreadBytes)
+	{
+		I2C001_DataType data5;
+
+		data5.Data1.TDF_Type = I2C_TDF_MRxAck1;
+
+
+		data5.Data1.Data = ubyteFF;
+		while(!I2C001_WriteData(&I2C001_Handle0,&data5))
+		{
+			;
+		}
+
+		//}
+		indexI2CreadBytes++;
+	}
+	else if(7 == indexI2CreadBytes)
+	{
+		I2C001_DataType data6;
+		data6.Data1.TDF_Type = I2C_TDF_MStop;
+		data6.Data1.Data = ubyteFF;
+		while(!I2C001_WriteData(&I2C001_Handle0,&data6));
+		indexI2CreadBytes++;
 	}
 }
 
-
 void timerHandlerI2CwriteByte(void *T)
 {
+	while(1){
 	if(0 == indexI2CwriteByte)
 	{
 		I2C001_DataType data1;
@@ -162,6 +266,7 @@ void timerHandlerI2CwriteByte(void *T)
 		data1.Data1.Data = ((addressTimerWrite<<1) | I2C_WRITE);
 		while(!I2C001_WriteData(&I2C001_Handle0,&data1));
 		indexI2CwriteByte++;
+		delay();
 	}
 	else if(1 == indexI2CwriteByte)
 	{
@@ -170,6 +275,7 @@ void timerHandlerI2CwriteByte(void *T)
 		data2.Data1.Data = subAddressTimerWrite;
 		while(!I2C001_WriteData(&I2C001_Handle0,&data2));
 		indexI2CwriteByte++;
+		delay();
 	}
 	else if(2 == indexI2CwriteByte)
 	{
@@ -178,6 +284,7 @@ void timerHandlerI2CwriteByte(void *T)
 		data3.Data1.Data = dataWrite;
 		while(!I2C001_WriteData(&I2C001_Handle0,&data3));
 		indexI2CwriteByte++;
+		delay();
 	}
 	else if(3 == indexI2CwriteByte)
 	{
@@ -186,5 +293,11 @@ void timerHandlerI2CwriteByte(void *T)
 		data4.Data1.Data = ubyteFF;
 		while(!I2C001_WriteData(&I2C001_Handle0,&data4));
 		indexI2CwriteByte++;
+		delay();
+	}
+	else if(4 == indexI2CwriteByte)
+	{
+		break;
+	}
 	}
 }
